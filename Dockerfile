@@ -20,5 +20,4 @@ COPY --from=build /src/tsconfig.json ./tsconfig.json
 COPY --from=build /src/node_modules ./node_modules
 COPY --from=build /src/dist ./dist
 
-# ENTRYPOINT ["tail", "-f", "/dev/null"]
 ENTRYPOINT ["node", "dist/main.js"]
