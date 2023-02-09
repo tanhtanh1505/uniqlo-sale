@@ -1,0 +1,14 @@
+version: '3.3'
+services:
+  prod:
+    container_name: uniqlo_server_prod
+    image: uniqlo-server-prod:1.0.0
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - ${PWD}/.env:/app/.env
+    network_mode: host
+    restart: unless-stopped
