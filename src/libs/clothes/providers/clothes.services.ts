@@ -4,8 +4,6 @@ import { CrawlerResponse } from '../dto/crawler.dto';
 import { CrawlerService } from 'src/libs/crawler/crawler.services';
 import { GoogleService } from 'src/helper/googleSheet/google.service';
 import { google } from 'googleapis';
-import { CronExpression, SchedulerRegistry } from '@nestjs/schedule';
-import { CronJob } from 'cron';
 
 @Injectable()
 export class ClothesService {
@@ -13,12 +11,7 @@ export class ClothesService {
   private readonly crawlerService: CrawlerService = new CrawlerService();
   private readonly logger = new Logger(ClothesService.name);
 
-  constructor(
-    private googleService: GoogleService,
-    private schedulerRegistry: SchedulerRegistry,
-  ) {
-    //this.addCronJob();
-  }
+  constructor(private googleService: GoogleService) {}
 
   async crawl(): Promise<CrawlerResponse> {
     try {
@@ -77,32 +70,5 @@ export class ClothesService {
       console.log(e);
       return 'fail';
     }
-  }
-
-  addCronJob() {
-    const job = new CronJob(
-      CronExpression.EVERY_SECOND,
-      () => {
-        this.logger.warn(`Job added to run!`);
-      },
-      null,
-      true,
-      'Asia/Ho_Chi_Minh',
-    );
-
-    this.schedulerRegistry.addCronJob('uniqlo-sale', job);
-    job.start();
-
-    this.logger.warn(`job uniqlo added for each minute at seconds!`);
-  }
-
-  restartCron() {
-    this.schedulerRegistry.getCronJob('uniqlo-sale').start();
-    this.logger.warn(`job uniqlo restarted!`);
-  }
-
-  deleteCron() {
-    this.schedulerRegistry.getCronJob('uniqlo-sale').stop();
-    this.logger.warn(`job crawl uniqlo deleted!`);
   }
 }

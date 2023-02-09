@@ -36,20 +36,4 @@ export class ClothesController {
   async saveToGoogleSheet(): Promise<string> {
     return await this.clothesService.saveToGoogleSheet();
   }
-
-  @ApiOperation({ summary: 'Restart Cron' })
-  @ApiResponse({ status: 200 })
-  @Get('restart')
-  async restartCron(): Promise<string> {
-    this.clothesService.restartCron();
-    return 'Restarted';
-  }
-
-  @ApiOperation({ summary: 'Delete Cron' })
-  @ApiResponse({ status: 200 })
-  @Delete('delete')
-  async deleteCron(): Promise<string> {
-    this.clothesService.deleteCron();
-    return 'Deleted';
-  }
 }

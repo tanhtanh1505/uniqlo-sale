@@ -14,6 +14,7 @@ import { ClothesController } from './libs/clothes/controllers/clothes.controller
 import { UsersModule } from './libs/users/users.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { MailModule } from './mail/mail.module';
+import { CronModule } from './libs/cron/cron.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { MailModule } from './mail/mail.module';
     ScheduleModule.forRoot(),
     ClothesModule,
     UsersModule,
+    CronModule,
     MailModule,
   ],
   controllers: [AppController],
