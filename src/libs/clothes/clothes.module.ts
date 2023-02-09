@@ -9,5 +9,6 @@ import { ClothesService } from './providers/clothes.services';
   imports: [CrawlerModule, GoogleModule],
   controllers: [ClothesController],
   providers: [ClothesService],
+  exports: [ClothesService],
 })
 export class ClothesModule {}

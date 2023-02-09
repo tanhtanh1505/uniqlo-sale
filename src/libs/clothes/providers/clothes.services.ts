@@ -10,8 +10,7 @@ export class ClothesService {
   private readonly clothes: Cloth[] = [];
   private readonly crawlerService: CrawlerService = new CrawlerService();
   private readonly logger = new Logger(ClothesService.name);
-
-  constructor(private googleService: GoogleService) {}
+  private googleService = new GoogleService();
 
   async crawl(): Promise<CrawlerResponse> {
     try {
