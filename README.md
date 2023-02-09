@@ -4,8 +4,11 @@
 
 Crawl sale off items in Uniqlo and remind to registed users via email
 
-## Keys
-Create GoogleOauth key and move to
+## Requirements
+### Env
+Create `.env` file likes <a href=".env.example">env example</a>
+### Keys
+Create GoogleOauth key, named `googleOauth.key.json` and move to
 ```bash
 /utils/keys
 ```
