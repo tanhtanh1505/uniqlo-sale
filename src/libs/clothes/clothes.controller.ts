@@ -7,8 +7,8 @@ import {
 } from '@nestjs/swagger';
 
 import { Cloth } from 'src/entity';
-import { CrawlerResponse } from '../dto/crawler.dto';
-import { ClothesService } from '../providers/clothes.services';
+import { CrawlerResponse } from '../crawler/crawler.dto';
+import { ClothesService } from './clothes.services';
 
 @ApiBearerAuth()
 @ApiTags('clothes')
@@ -26,7 +26,7 @@ export class ClothesController {
   @ApiOperation({ summary: 'Crawl' })
   @ApiResponse({ status: 200, type: CrawlerResponse })
   @Get('crawl')
-  async crawl(): Promise<CrawlerResponse> {
+  async crawl(): Promise<CrawlerResponse[]> {
     return await this.clothesService.crawl();
   }
 

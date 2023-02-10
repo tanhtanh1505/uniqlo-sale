@@ -10,7 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ClothesModule } from './libs/clothes/clothes.module';
 import { APP_PIPE } from '@nestjs/core';
 import { LoggerMiddleware } from './common/middleware';
-import { ClothesController } from './libs/clothes/controllers/clothes.controller';
+import { ClothesController } from './libs/clothes/clothes.controller';
 import { UsersModule } from './libs/users/users.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { MailModule } from './mail/mail.module';

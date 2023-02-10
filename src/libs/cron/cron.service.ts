@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
-import { ClothesService } from '../clothes/providers/clothes.services';
+import { ClothesService } from '../clothes/clothes.services';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
@@ -21,10 +21,16 @@ export class CronService {
       async () => {
         this.logger.warn(`Job added to run!`);
         const responseCrawl = await this.clothesService.crawl();
-        if (
-          responseCrawl.numberAdded > 0 ||
-          responseCrawl.numberCrawled !== responseCrawl.numberTotal
-        ) {
+        let updated = false;
+
+        for (const res of responseCrawl) {
+          if (res.numberAdded != 0) {
+            updated = true;
+            break;
+          }
+        }
+
+        if (updated) {
           await this.clothesService.saveToGoogleSheet();
           await this.usersService.sendMailNotiSale();
         }

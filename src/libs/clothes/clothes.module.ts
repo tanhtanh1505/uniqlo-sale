@@ -2,8 +2,8 @@
 import { Module } from '@nestjs/common';
 import { GoogleModule } from 'src/helper/googleSheet/google.module';
 import { CrawlerModule } from '../crawler/crawler.module';
-import { ClothesController } from './controllers/clothes.controller';
-import { ClothesService } from './providers/clothes.services';
+import { ClothesController } from './clothes.controller';
+import { ClothesService } from './clothes.services';
 
 @Module({
   imports: [CrawlerModule, GoogleModule],
