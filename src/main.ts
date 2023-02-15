@@ -8,6 +8,7 @@ async function bootstrap() {
   const logger = new Logger();
   const app = await NestFactory.create(AppModule);
   const { httpAdapter } = app.get(HttpAdapterHost);
+  app.setGlobalPrefix('/uniqlo');
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
   logger.debug(process.env.PORT);
 
@@ -18,7 +19,7 @@ async function bootstrap() {
     .addTag('clothes')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('/uniqlo/api', app, document);
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
