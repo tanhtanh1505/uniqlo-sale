@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { google } from 'googleapis';
 import { GoogleService } from 'src/helper/googleSheet/google.service';
-import { RegisterEmailDto } from './users.dto';
+import { RegisterEmailDto, RegisterEmailResponseDto } from './users.dto';
 import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
@@ -11,7 +11,9 @@ export class UsersService {
     private mailService: MailService,
   ) {}
 
-  async registerEmail(req: RegisterEmailDto): Promise<string> {
+  async registerEmail(
+    req: RegisterEmailDto,
+  ): Promise<RegisterEmailResponseDto> {
     try {
       const client = await this.googleService.Authorize();
       const sheets = google.sheets({ version: 'v4', auth: client });
@@ -22,7 +24,7 @@ export class UsersService {
       if (users && users.length) {
         users.map((user) => {
           if (user[0] == req.email) {
-            throw new Error('Email already exists');
+            throw { message: 'Email already exists' };
           }
         });
         users.push([req.email]);
@@ -33,9 +35,9 @@ export class UsersService {
         ]);
       }
 
-      return 'success';
+      return { message: 'Success!' };
     } catch (error) {
-      return error.message;
+      return { message: error.message };
     }
   }
 

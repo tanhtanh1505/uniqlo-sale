@@ -10,6 +10,7 @@ async function bootstrap() {
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.setGlobalPrefix('/uniqlo');
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
+  app.enableCors();
   logger.debug(process.env.PORT);
 
   const config = new DocumentBuilder()

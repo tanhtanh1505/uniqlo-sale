@@ -6,3 +6,8 @@ export class RegisterEmailDto {
   @ApiProperty({ type: String, required: true })
   email: string;
 }
+
+export class RegisterEmailResponseDto {
+  @ApiProperty({ type: String, required: true })
+  message: string;
+}

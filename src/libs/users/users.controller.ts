@@ -5,7 +5,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { RegisterEmailDto } from './users.dto';
+import { RegisterEmailDto, RegisterEmailResponseDto } from './users.dto';
 import { UsersService } from './users.service';
 
 @ApiBearerAuth()
@@ -17,7 +17,9 @@ export class UsersController {
   @ApiOperation({ summary: 'Register Mail' })
   @ApiResponse({ status: 200 })
   @Post()
-  async findAll(@Body() registerEmail: RegisterEmailDto): Promise<string> {
+  async findAll(
+    @Body() registerEmail: RegisterEmailDto,
+  ): Promise<RegisterEmailResponseDto> {
     return this.usersService.registerEmail(registerEmail);
   }
 
