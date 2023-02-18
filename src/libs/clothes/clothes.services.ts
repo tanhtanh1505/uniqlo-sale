@@ -4,14 +4,43 @@ import { CrawlerResponse } from '../crawler/crawler.dto';
 import { CrawlerService } from 'src/libs/crawler/crawler.services';
 import { GoogleService } from 'src/helper/googleSheet/google.service';
 import { google } from 'googleapis';
-import { Person, Urls } from 'src/utils/enums';
+import { Person } from 'src/utils/enums';
 
 @Injectable()
 export class ClothesService {
   private readonly clothes: Map<string, Cloth[]> = new Map();
+  private readonly personUrls: Map<string, string[]> = new Map();
   private readonly crawlerService: CrawlerService = new CrawlerService();
   private readonly logger = new Logger(ClothesService.name);
   private googleService = new GoogleService();
+
+  constructor() {
+    this.init();
+    for (const person of Object.values(Person)) {
+      this.clothes.set(person, []);
+    }
+  }
+
+  async init() {
+    this.logger.debug('init url');
+    const sheetId = process.env.SHEET_ID;
+    const client = await this.googleService.Authorize();
+    const sheets = google.sheets({ version: 'v4', auth: client });
+
+    const res = await this.googleService.getSheet(sheets, sheetId, 'url');
+
+    for (const person of Object.values(Person)) {
+      const urls = [];
+      const indexColumn = res[0].indexOf(person);
+      let indexRow = 1;
+      while (res[indexRow] && res[indexRow][indexColumn]) {
+        urls.push(res[indexRow][indexColumn]);
+        indexRow++;
+      }
+      this.personUrls.set(person, urls);
+    }
+    console.log(this.personUrls);
+  }
 
   async crawlScheduleSale(): Promise<CrawlerResponse[]> {
     try {
@@ -49,34 +78,24 @@ export class ClothesService {
   }
 
   async crawlRandomSale(): Promise<CrawlerResponse[]> {
-    //maintaining
     try {
       const resultCrawl: CrawlerResponse[] = [];
-      this.logger.debug('run here');
-      this.logger.debug(Object.keys(Urls));
-      for (const person of Object.keys(Urls)) {
-        this.logger.debug(person);
-        this.logger.debug('run here');
-        if (true) continue;
-        const response = await this.crawlerService.crawlRandomSale(
-          `https://www.uniqlo.com/vn/vi/${person}/tops/tops-collections`,
-        );
+      for (const person of Object.values(Person)) {
+        const response = [];
+        for (const url of this.personUrls.get(person)) {
+          const tempRes = await this.crawlerService.crawlRandomSale(url);
+          response.push(...tempRes);
+        }
 
-        const tempClothes = this.clothes.get(person) || [];
+        const oldSize = this.clothes.get(person).length;
 
-        const oldSize = tempClothes.length;
-
-        response.forEach((cloth) => {
-          tempClothes.push(cloth);
-        });
-
-        this.clothes.set(person, tempClothes);
+        this.clothes.set(person, response);
 
         const res: CrawlerResponse = {
-          person: Person[person as keyof typeof Person],
-          numberAdded: tempClothes.length - oldSize,
+          person: person,
+          numberAdded: this.clothes.get(person).length - oldSize,
           numberCrawled: response.length,
-          numberTotal: tempClothes.length,
+          numberTotal: this.clothes.get(person).length,
         };
 
         resultCrawl.push(res);
@@ -97,6 +116,7 @@ export class ClothesService {
 
   async saveToGoogleSheet() {
     try {
+      this.logger.debug('save to google sheet');
       const sheetId = process.env.SHEET_ID;
       const client = await this.googleService.Authorize();
       const sheets = google.sheets({ version: 'v4', auth: client });
@@ -119,13 +139,16 @@ export class ClothesService {
         rootData.push(columnTitles);
 
         const tempClothes = this.clothes.get(person);
+        console.log(person);
+
+        console.log(tempClothes);
         if (tempClothes && tempClothes.length && tempClothes.length > 0) {
           tempClothes.forEach((cloth) => {
             rootData.push([
               cloth.title,
               cloth.price,
               cloth.salePrice,
-              cloth.time.toString(),
+              cloth.time,
               cloth.url,
             ]);
           });

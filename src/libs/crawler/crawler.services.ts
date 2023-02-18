@@ -106,7 +106,7 @@ export class CrawlerService {
             title: title,
             price: price,
             salePrice: salePrice,
-            time: Date.now(),
+            time: 'Random sale',
             url: url,
           });
         }
