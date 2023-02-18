@@ -33,7 +33,7 @@ export class CronService {
 
         if (updated) {
           await this.clothesService.saveToGoogleSheet();
-          await this.usersService.sendMailNotiSale();
+          //await this.usersService.sendMailNotiSale();
         }
       },
       null,
