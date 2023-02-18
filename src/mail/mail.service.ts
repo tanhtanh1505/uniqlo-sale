@@ -13,7 +13,7 @@ export class MailService {
         subject: 'Uniqlo Sale Off!',
         template: './notiSale', // `.hbs` extension is appended automatically
         context: {
-          url: `https://docs.google.com/spreadsheets/d/${process.env.SHEET_ID}/edit#gid=0`,
+          url: `https://docs.google.com/spreadsheets/d/${process.env.SHEET_CLOTHES}/edit#gid=0`,
         },
       });
     }
@@ -25,6 +25,9 @@ export class MailService {
       from: '"Uniqlo Sale Noti" <support@example.com>',
       subject: 'Register success!',
       template: './register',
+      context: {
+        url: `https://docs.google.com/spreadsheets/d/${process.env.SHEET_CLOTHES}/edit#gid=0`,
+      },
     });
   }
 }

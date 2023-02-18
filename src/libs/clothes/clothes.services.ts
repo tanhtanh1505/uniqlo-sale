@@ -23,7 +23,7 @@ export class ClothesService {
 
   async init() {
     this.logger.debug('init url');
-    const sheetId = process.env.SHEET_ID;
+    const sheetId = process.env.SHEET_USERS;
     const client = await this.googleService.Authorize();
     const sheets = google.sheets({ version: 'v4', auth: client });
 
@@ -117,7 +117,7 @@ export class ClothesService {
   async saveToGoogleSheet() {
     try {
       this.logger.debug('save to google sheet');
-      const sheetId = process.env.SHEET_ID;
+      const sheetId = process.env.SHEET_CLOTHES;
       const client = await this.googleService.Authorize();
       const sheets = google.sheets({ version: 'v4', auth: client });
 

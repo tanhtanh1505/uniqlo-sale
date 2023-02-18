@@ -18,7 +18,7 @@ export class UsersService {
       const client = await this.googleService.Authorize();
       const sheets = google.sheets({ version: 'v4', auth: client });
 
-      const sheetId = process.env.SHEET_ID;
+      const sheetId = process.env.SHEET_USERS;
       const users = await this.googleService.getSheet(sheets, sheetId, 'users');
 
       if (users && users.length) {
@@ -47,7 +47,7 @@ export class UsersService {
     const client = await this.googleService.Authorize();
     const sheets = google.sheets({ version: 'v4', auth: client });
 
-    const sheetId = process.env.SHEET_ID;
+    const sheetId = process.env.SHEET_USERS;
     const users = await this.googleService.getSheet(sheets, sheetId, 'users');
 
     if (users && users.length) {
