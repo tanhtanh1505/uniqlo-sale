@@ -20,7 +20,7 @@ export class CronService {
       CronExpression.EVERY_HOUR,
       async () => {
         this.logger.warn(`Job added to run!`);
-        const responseCrawl = await this.clothesService.crawl();
+        const responseCrawl = await this.clothesService.crawlScheduleSale();
         let updated = false;
 
         for (const res of responseCrawl) {

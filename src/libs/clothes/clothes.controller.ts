@@ -25,9 +25,16 @@ export class ClothesController {
 
   @ApiOperation({ summary: 'Crawl' })
   @ApiResponse({ status: 200, type: CrawlerResponse })
-  @Get('crawl')
-  async crawl(): Promise<CrawlerResponse[]> {
-    return await this.clothesService.crawl();
+  @Get('crawl-schedule-sale')
+  async crawlScheduleSale(): Promise<CrawlerResponse[]> {
+    return await this.clothesService.crawlScheduleSale();
+  }
+
+  @ApiOperation({ summary: 'Crawl' })
+  @ApiResponse({ status: 200, type: CrawlerResponse })
+  @Get('crawl-random-sale')
+  async crawlRandomSale(): Promise<CrawlerResponse[]> {
+    return await this.clothesService.crawlRandomSale();
   }
 
   @ApiOperation({ summary: 'Save to google sheet' })

@@ -4,7 +4,7 @@ import { CrawlerResponse } from '../crawler/crawler.dto';
 import { CrawlerService } from 'src/libs/crawler/crawler.services';
 import { GoogleService } from 'src/helper/googleSheet/google.service';
 import { google } from 'googleapis';
-import { Person } from 'src/utils/enums';
+import { Person, Urls } from 'src/utils/enums';
 
 @Injectable()
 export class ClothesService {
@@ -13,12 +13,12 @@ export class ClothesService {
   private readonly logger = new Logger(ClothesService.name);
   private googleService = new GoogleService();
 
-  async crawl(): Promise<CrawlerResponse[]> {
+  async crawlScheduleSale(): Promise<CrawlerResponse[]> {
     try {
       const resultCrawl: CrawlerResponse[] = [];
 
       for (const person of Object.values(Person)) {
-        const response = await this.crawlerService.crawl(
+        const response = await this.crawlerService.crawlScheduleSale(
           `https://www.uniqlo.com/vn/vi/feature/limited-offers/${person}`,
         );
 
@@ -34,6 +34,46 @@ export class ClothesService {
 
         const res: CrawlerResponse = {
           person: person,
+          numberAdded: tempClothes.length - oldSize,
+          numberCrawled: response.length,
+          numberTotal: tempClothes.length,
+        };
+
+        resultCrawl.push(res);
+      }
+
+      return resultCrawl;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async crawlRandomSale(): Promise<CrawlerResponse[]> {
+    //maintaining
+    try {
+      const resultCrawl: CrawlerResponse[] = [];
+      this.logger.debug('run here');
+      this.logger.debug(Object.keys(Urls));
+      for (const person of Object.keys(Urls)) {
+        this.logger.debug(person);
+        this.logger.debug('run here');
+        if (true) continue;
+        const response = await this.crawlerService.crawlRandomSale(
+          `https://www.uniqlo.com/vn/vi/${person}/tops/tops-collections`,
+        );
+
+        const tempClothes = this.clothes.get(person) || [];
+
+        const oldSize = tempClothes.length;
+
+        response.forEach((cloth) => {
+          tempClothes.push(cloth);
+        });
+
+        this.clothes.set(person, tempClothes);
+
+        const res: CrawlerResponse = {
+          person: Person[person as keyof typeof Person],
           numberAdded: tempClothes.length - oldSize,
           numberCrawled: response.length,
           numberTotal: tempClothes.length,

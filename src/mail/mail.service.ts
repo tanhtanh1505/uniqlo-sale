@@ -18,4 +18,13 @@ export class MailService {
       });
     }
   }
+
+  async sendMailRegisted(mail: string) {
+    await this.mailerService.sendMail({
+      to: mail,
+      from: '"Uniqlo Sale Noti" <support@example.com>',
+      subject: 'Register success!',
+      template: './register',
+    });
+  }
 }

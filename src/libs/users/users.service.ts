@@ -29,10 +29,12 @@ export class UsersService {
         });
         users.push([req.email]);
         await this.googleService.updateSheet(sheets, sheetId, 'users', users);
+        await this.mailService.sendMailRegisted(req.email);
       } else {
         await this.googleService.updateSheet(sheets, sheetId, 'users', [
           [req.email],
         ]);
+        await this.mailService.sendMailRegisted(req.email);
       }
 
       return { message: 'Success!' };
