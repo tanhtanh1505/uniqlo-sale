@@ -12,6 +12,7 @@ export class CrawlerService {
   async crawlScheduleSale(url: string): Promise<Cloth[]> {
     const browser = await puppeteer.launch({
       //headless: false,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
     await page.setDefaultNavigationTimeout(0);
@@ -61,6 +62,7 @@ export class CrawlerService {
   async crawlRandomSale(url: string): Promise<Cloth[]> {
     const browser = await puppeteer.launch({
       //headless: false,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
     await page.setDefaultNavigationTimeout(0);
