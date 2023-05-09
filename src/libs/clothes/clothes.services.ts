@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cloth } from 'src/entity';
-import { CrawlerResponse } from '../crawler/crawler.dto';
 import { CrawlerService } from 'src/libs/crawler/crawler.services';
 import { GoogleService } from 'src/helper/googleSheet/google.service';
 import { google } from 'googleapis';
@@ -8,11 +7,10 @@ import { Person } from 'src/utils/enums';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UrlsService } from '../urls/urls.service';
+import { CrawlClothResponse } from './clothes.dto';
 
 @Injectable()
 export class ClothesService {
-  private readonly clothes: Map<string, Cloth[]> = new Map();
-  private readonly personUrls: Map<string, string[]> = new Map();
   private readonly crawlerService: CrawlerService = new CrawlerService();
   private readonly logger = new Logger(ClothesService.name);
   private googleService = new GoogleService();
@@ -22,44 +20,11 @@ export class ClothesService {
     private readonly urlService: UrlsService,
   ) {}
 
-  async crawlScheduleSale(): Promise<CrawlerResponse[]> {
+  async crawlRandomSale(): Promise<CrawlClothResponse[]> {
     try {
-      const resultCrawl: CrawlerResponse[] = [];
+      const resultCrawl: CrawlClothResponse[] = [];
+      await this.clothModel.deleteMany({});
 
-      for (const person of Object.values(Person)) {
-        const response = await this.crawlerService.crawlScheduleSale(
-          `https://www.uniqlo.com/vn/vi/feature/limited-offers/${person}`,
-        );
-
-        const tempClothes = this.clothes.get(person) || [];
-
-        const oldSize = tempClothes.length;
-
-        response.forEach((cloth) => {
-          tempClothes.push(cloth);
-        });
-
-        this.clothes.set(person, tempClothes);
-
-        const res: CrawlerResponse = {
-          person: person,
-          numberAdded: tempClothes.length - oldSize,
-          numberCrawled: response.length,
-          numberTotal: tempClothes.length,
-        };
-
-        resultCrawl.push(res);
-      }
-
-      return resultCrawl;
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  async crawlRandomSale(): Promise<CrawlerResponse[]> {
-    try {
-      const resultCrawl: CrawlerResponse[] = [];
       for (const person of Object.values(Person)) {
         const response = [];
         const urls = await this.urlService.getUrlByPerson(person);
@@ -73,15 +38,9 @@ export class ClothesService {
           this.clothModel.insertMany(tempRes);
         }
 
-        const oldSize = this.clothes.get(person).length;
-
-        this.clothes.set(person, response);
-
-        const res: CrawlerResponse = {
+        const res: CrawlClothResponse = {
           person: person,
-          numberAdded: this.clothes.get(person).length - oldSize,
           numberCrawled: response.length,
-          numberTotal: this.clothes.get(person).length,
         };
 
         resultCrawl.push(res);
@@ -97,11 +56,8 @@ export class ClothesService {
     return this.crawlerService.crawlSizeColor(url);
   }
 
-  findAll(): Cloth[] {
-    return Array.from(this.clothes.values()).reduce(
-      (acc, cur) => acc.concat(cur),
-      [],
-    );
+  async findAll(): Promise<Cloth[]> {
+    return await this.clothModel.find().exec();
   }
 
   async saveToGoogleSheet() {
@@ -120,16 +76,17 @@ export class ClothesService {
 
         const columnTitles = [
           'Title',
-          'Price',
+          'Price (VND)',
           'Sale Price',
+          'Size Color',
           'Time',
           'Url',
+          'Image',
           lastestUpdate,
         ];
         rootData.push(columnTitles);
 
-        const tempClothes = this.clothes.get(person);
-        console.log(person);
+        const tempClothes = await this.clothModel.find({ person });
 
         console.log(tempClothes);
         if (tempClothes && tempClothes.length && tempClothes.length > 0) {
@@ -138,8 +95,10 @@ export class ClothesService {
               cloth.title,
               cloth.price,
               cloth.salePrice,
+              cloth.sizeColor.join('\n'),
               cloth.time,
               cloth.url,
+              `=IMAGE("${cloth.image}")`,
             ]);
           });
         }

@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
-import { GoogleModule } from 'src/helper/googleSheet/google.module';
-import { MailModule } from 'src/mail/mail.module';
-import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { UserSchema } from 'src/schemas/user.schema';
 
 @Module({
-  imports: [GoogleModule, MailModule],
-  controllers: [UsersController],
+  imports: [MongooseModule.forFeature([{ schema: UserSchema, name: 'User' }])],
   providers: [UsersService],
   exports: [UsersService],
 })

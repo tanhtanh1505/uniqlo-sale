@@ -150,7 +150,7 @@ export class CrawlerService {
           sizes[j].click();
           setTimeout(() => {
             console.log('');
-          }, 1000);
+          }, 100);
           const curSize = sizes[j].parentElement.innerText;
 
           const price = document.getElementsByClassName(

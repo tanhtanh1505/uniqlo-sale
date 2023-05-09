@@ -17,6 +17,8 @@ import { MailModule } from './mail/mail.module';
 import { CronModule } from './libs/cron/cron.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UrlsModule } from './libs/urls/urls.module';
+import { AuthModule } from './libs/auth/auth.module';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import { UrlsModule } from './libs/urls/urls.module';
     CronModule,
     MailModule,
     UrlsModule,
+    AuthModule,
+    PassportModule.register({ session: true }),
   ],
   controllers: [AppController],
   providers: [

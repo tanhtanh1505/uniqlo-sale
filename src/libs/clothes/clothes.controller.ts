@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -7,9 +7,8 @@ import {
 } from '@nestjs/swagger';
 
 import { Cloth } from 'src/entity';
-import { CrawlerResponse } from '../crawler/crawler.dto';
-import { SizeaColor } from './clothes.dto';
 import { ClothesService } from './clothes.services';
+import { CrawlClothResponse } from './clothes.dto';
 
 @ApiBearerAuth()
 @ApiTags('clothes')
@@ -25,24 +24,10 @@ export class ClothesController {
   }
 
   @ApiOperation({ summary: 'Crawl' })
-  @ApiResponse({ status: 200, type: CrawlerResponse })
-  @Get('crawl-schedule-sale')
-  async crawlScheduleSale(): Promise<CrawlerResponse[]> {
-    return await this.clothesService.crawlScheduleSale();
-  }
-
-  @ApiOperation({ summary: 'Crawl' })
-  @ApiResponse({ status: 200, type: CrawlerResponse })
+  @ApiResponse({ status: 200, type: CrawlClothResponse })
   @Get('crawl-random-sale')
-  async crawlRandomSale(): Promise<CrawlerResponse[]> {
+  async crawlRandomSale(): Promise<CrawlClothResponse[]> {
     return await this.clothesService.crawlRandomSale();
-  }
-
-  @ApiOperation({ summary: 'Crawl' })
-  @ApiResponse({ status: 200, type: CrawlerResponse })
-  @Get('crawl-size-color')
-  async crawlSizeaColor(@Query('url') url: string): Promise<SizeaColor[]> {
-    return await this.clothesService.crawlSizeColor(url);
   }
 
   @ApiOperation({ summary: 'Save to google sheet' })

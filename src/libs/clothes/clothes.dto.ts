@@ -1,11 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Person } from 'src/utils/enums';
 
-export class SizeaColor {
-  price: string;
-
-  @ApiProperty({ type: String, example: 'red' })
-  color: string;
+export class CrawlClothResponse {
+  @ApiProperty({ type: Object.values(Person), example: 'men' })
+  person: Person;
 
   @ApiProperty({ type: Number, example: 10 })
-  size: number;
+  numberCrawled: number;
 }

@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { ClothesService } from '../clothes/clothes.services';
-import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class CronService {
@@ -10,9 +9,8 @@ export class CronService {
   constructor(
     private schedulerRegistry: SchedulerRegistry,
     private clothesService: ClothesService,
-    private usersService: UsersService,
   ) {
-    this.addCronJob();
+    // this.addCronJob();
   }
 
   addCronJob() {
@@ -25,7 +23,7 @@ export class CronService {
         let updated = false;
 
         for (const res of responseCrawl) {
-          if (res.numberAdded != 0) {
+          if (res.numberCrawled > 0) {
             updated = true;
             break;
           }
