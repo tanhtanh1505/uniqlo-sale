@@ -12,6 +12,7 @@ export class CrawlerService {
   async crawlScheduleSale(url: string): Promise<Cloth[]> {
     const browser = await puppeteer.launch({
       //headless: false,
+      executablePath: '/usr/bin/google-chrome',
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
@@ -59,9 +60,10 @@ export class CrawlerService {
     return response;
   }
 
-  async crawlRandomSale(url: string): Promise<Cloth[]> {
+  async crawlRandomSale(person: string, url: string): Promise<Cloth[]> {
     const browser = await puppeteer.launch({
       //headless: false,
+      executablePath: '/usr/bin/google-chrome',
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
@@ -89,14 +91,10 @@ export class CrawlerService {
             items[i].children[0].childNodes[0].children[2].children[1]
               .innerText;
 
-          // const size =
-          //   items[i].children[0].childNodes[0].children[2].children[0]
-          //     .children[1].innerText;
-
-          // const image =
-          //   items[i].children[0].childNodes[0].children[0].getElementsByTagName(
-          //     'img',
-          //   )[0].src;
+          const image =
+            items[i].children[0].childNodes[0].children[0].getElementsByTagName(
+              'img',
+            )[0].src;
 
           let url = items[i].firstChild.getAttribute('href');
 
@@ -106,16 +104,70 @@ export class CrawlerService {
 
           links.push({
             title: title,
-            price: price,
-            salePrice: salePrice,
+            price: price.replace('VND\n', ''),
+            salePrice: salePrice.replace('VND\n', ''),
             time: 'Random sale',
+            image: image,
             url: url,
           });
         }
       }
-      console.log(links);
-
       return links;
+    });
+
+    for (let i = 0; i < response.length; i++) {
+      const sizeColor = await this.crawlSizeColor(response[i].url);
+      response[i].sizeColor = sizeColor;
+      response[i].person = person;
+    }
+
+    await browser.close();
+
+    return response;
+  }
+
+  async crawlSizeColor(url: string) {
+    const browser = await puppeteer.launch({
+      // headless: false,
+      executablePath: '/usr/bin/google-chrome',
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    const page = await browser.newPage();
+    await page.setDefaultNavigationTimeout(0);
+
+    await page.goto(url, { waitUntil: 'networkidle0' });
+
+    const response = await page.evaluate(() => {
+      const colors = document.getElementsByName('product-color-picker');
+      const sizes = document.getElementsByName('product-size-picker');
+      const listSizeaColor = [];
+
+      for (let i = 0; i < colors.length; i++) {
+        colors[i].click();
+        const curColor = colors[i].parentElement.parentElement.dataset.test;
+
+        for (let j = 0; j < sizes.length; j++) {
+          sizes[j].click();
+          setTimeout(() => {
+            console.log('');
+          }, 1000);
+          const curSize = sizes[j].parentElement.innerText;
+
+          const price = document.getElementsByClassName(
+            'price fr-no-uppercase',
+          )[0].children[1].className;
+          const curPrice = document.getElementsByClassName(
+            'price fr-no-uppercase',
+          )[0].children[1].innerText;
+
+          if (price === 'price-limited') {
+            listSizeaColor.push(
+              `${curColor}-${curSize}-${curPrice.replace('VND\n', '')}`,
+            );
+          }
+        }
+      }
+      return listSizeaColor;
     });
     console.log(response);
 

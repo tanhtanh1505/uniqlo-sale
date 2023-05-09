@@ -15,15 +15,19 @@ import { UsersModule } from './libs/users/users.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { MailModule } from './mail/mail.module';
 import { CronModule } from './libs/cron/cron.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { UrlsModule } from './libs/urls/urls.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     ScheduleModule.forRoot(),
+    MongooseModule.forRoot(process.env.MONGO_URI),
     ClothesModule,
     UsersModule,
     CronModule,
     MailModule,
+    UrlsModule,
   ],
   controllers: [AppController],
   providers: [

@@ -5,6 +5,9 @@ import { CrawlerService } from 'src/libs/crawler/crawler.services';
 import { GoogleService } from 'src/helper/googleSheet/google.service';
 import { google } from 'googleapis';
 import { Person } from 'src/utils/enums';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { UrlsService } from '../urls/urls.service';
 
 @Injectable()
 export class ClothesService {
@@ -14,33 +17,10 @@ export class ClothesService {
   private readonly logger = new Logger(ClothesService.name);
   private googleService = new GoogleService();
 
-  constructor() {
-    this.init();
-    for (const person of Object.values(Person)) {
-      this.clothes.set(person, []);
-    }
-  }
-
-  async init() {
-    this.logger.debug('init url');
-    const sheetId = process.env.SHEET_USERS;
-    const client = await this.googleService.Authorize();
-    const sheets = google.sheets({ version: 'v4', auth: client });
-
-    const res = await this.googleService.getSheet(sheets, sheetId, 'url');
-
-    for (const person of Object.values(Person)) {
-      const urls = [];
-      const indexColumn = res[0].indexOf(person);
-      let indexRow = 1;
-      while (res[indexRow] && res[indexRow][indexColumn]) {
-        urls.push(res[indexRow][indexColumn]);
-        indexRow++;
-      }
-      this.personUrls.set(person, urls);
-    }
-    console.log(this.personUrls);
-  }
+  constructor(
+    @InjectModel(Cloth.name) private clothModel: Model<Cloth>,
+    private readonly urlService: UrlsService,
+  ) {}
 
   async crawlScheduleSale(): Promise<CrawlerResponse[]> {
     try {
@@ -82,9 +62,15 @@ export class ClothesService {
       const resultCrawl: CrawlerResponse[] = [];
       for (const person of Object.values(Person)) {
         const response = [];
-        for (const url of this.personUrls.get(person)) {
-          const tempRes = await this.crawlerService.crawlRandomSale(url);
+        const urls = await this.urlService.getUrlByPerson(person);
+        console.log(urls);
+        for (const url of urls) {
+          const tempRes = await this.crawlerService.crawlRandomSale(
+            person,
+            url,
+          );
           response.push(...tempRes);
+          this.clothModel.insertMany(tempRes);
         }
 
         const oldSize = this.clothes.get(person).length;
@@ -105,6 +91,10 @@ export class ClothesService {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  async crawlSizeColor(url: string) {
+    return this.crawlerService.crawlSizeColor(url);
   }
 
   findAll(): Cloth[] {

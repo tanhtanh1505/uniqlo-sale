@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -8,6 +8,7 @@ import {
 
 import { Cloth } from 'src/entity';
 import { CrawlerResponse } from '../crawler/crawler.dto';
+import { SizeaColor } from './clothes.dto';
 import { ClothesService } from './clothes.services';
 
 @ApiBearerAuth()
@@ -35,6 +36,13 @@ export class ClothesController {
   @Get('crawl-random-sale')
   async crawlRandomSale(): Promise<CrawlerResponse[]> {
     return await this.clothesService.crawlRandomSale();
+  }
+
+  @ApiOperation({ summary: 'Crawl' })
+  @ApiResponse({ status: 200, type: CrawlerResponse })
+  @Get('crawl-size-color')
+  async crawlSizeaColor(@Query('url') url: string): Promise<SizeaColor[]> {
+    return await this.clothesService.crawlSizeColor(url);
   }
 
   @ApiOperation({ summary: 'Save to google sheet' })
