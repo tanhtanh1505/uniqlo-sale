@@ -9,7 +9,7 @@ export class UsersService {
   constructor(@InjectModel('User') private userModel: Model<User>) {}
 
   async create(user: CreateUserDto) {
-    await this.userModel.create(user);
+    return await this.userModel.create(user);
   }
 
   async findByEmail(email: string) {

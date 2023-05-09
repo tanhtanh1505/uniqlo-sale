@@ -1,7 +1,10 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import { GoogleAuthGuard } from './utils/guards';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   @Get()
@@ -19,7 +22,6 @@ export class AuthController {
 
   @Get('status')
   user(@Req() request: Request) {
-    console.log(request.user);
     if (request.user) {
       return { msg: 'Authenticated' };
     } else {
