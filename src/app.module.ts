@@ -19,6 +19,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UrlsModule } from './libs/urls/urls.module';
 import { AuthModule } from './libs/auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
+import { FavoritesModule } from './libs/favorites/favorites.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { PassportModule } from '@nestjs/passport';
     CronModule,
     MailModule,
     UrlsModule,
+    FavoritesModule,
     PassportModule.register({ session: true }),
   ],
   controllers: [AppController],
