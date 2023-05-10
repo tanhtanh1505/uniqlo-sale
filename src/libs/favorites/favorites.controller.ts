@@ -18,8 +18,8 @@ export class FavoriteController {
   @ApiOperation({ summary: 'Get all favorites' })
   @ApiResponse({ status: 200 })
   @Get('all')
-  async getAllFavorite(): Promise<Favorite[]> {
-    return await this.favoriteService.findAll();
+  async getAllFavorite(@Req() req): Promise<Favorite[]> {
+    return await this.favoriteService.findAll(req);
   }
 
   @ApiOperation({ summary: 'Add favorite' })

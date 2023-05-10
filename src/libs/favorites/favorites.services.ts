@@ -14,7 +14,7 @@ export class FavoritesService {
     return await this.favoriteModel.create({ user: req.user._id, ...favorite });
   }
 
-  async findAll(): Promise<Favorite[]> {
-    return await this.favoriteModel.find();
+  async findAll(req): Promise<Favorite[]> {
+    return await this.favoriteModel.find({ user: req.user._id });
   }
 }

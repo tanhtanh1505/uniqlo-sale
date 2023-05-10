@@ -7,6 +7,8 @@ import {
 } from '@nestjs/swagger';
 import { UrlsService } from './urls.service';
 import { AddUrlDto } from './urls.dto';
+import { Role } from 'src/utils/roles/role.enum';
+import { Roles } from 'src/utils/roles/role.decorator';
 
 @ApiBearerAuth()
 @ApiTags('urls')
@@ -14,6 +16,7 @@ import { AddUrlDto } from './urls.dto';
 export class UrlsController {
   constructor(private urlService: UrlsService) {}
 
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'Get all urls' })
   @ApiResponse({ status: 200 })
   @Get('all')
@@ -21,6 +24,7 @@ export class UrlsController {
     return await this.urlService.getAllUrl();
   }
 
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'Add url' })
   @ApiResponse({ status: 200 })
   @Post('new')

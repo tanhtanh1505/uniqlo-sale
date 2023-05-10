@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy } from 'passport-google-oauth20';
 import { AuthService } from '../auth.services';
 import ClientSecret from '../../../utils/keys/client_secret.json';
+import { Role } from 'src/utils/roles/role.enum';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
@@ -24,6 +25,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     const user = await this.authService.validateUser({
       email: profile.emails[0].value,
       displayName: profile.displayName,
+      roles: [Role.User],
     });
     // console.log('Validate');
     // console.log(user);

@@ -8,7 +8,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { ClothesModule } from './libs/clothes/clothes.module';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { LoggerMiddleware } from './common/middleware';
 import { ClothesController } from './libs/clothes/clothes.controller';
 import { UsersModule } from './libs/users/users.module';
@@ -20,6 +20,7 @@ import { UrlsModule } from './libs/urls/urls.module';
 import { AuthModule } from './libs/auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { FavoritesModule } from './libs/favorites/favorites.module';
+import { RolesGuard } from './utils/roles/role.guard';
 
 @Module({
   imports: [
@@ -41,6 +42,10 @@ import { FavoritesModule } from './libs/favorites/favorites.module';
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })
