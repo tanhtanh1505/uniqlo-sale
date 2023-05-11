@@ -1,1 +1,1 @@
-export * from './cloth/cloth.entity';
+export * from './cloth.entity';

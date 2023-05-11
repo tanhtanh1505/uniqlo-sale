@@ -9,59 +9,9 @@ import * as puppeteer from 'puppeteer';
 export class CrawlerService {
   private readonly clothes: Cloth[] = [];
 
-  async crawlScheduleSale(url: string): Promise<Cloth[]> {
-    const browser = await puppeteer.launch({
-      //headless: false,
-      executablePath: '/usr/bin/google-chrome',
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
-    const page = await browser.newPage();
-    await page.setDefaultNavigationTimeout(0);
-
-    await page.goto(url, { waitUntil: 'networkidle0' });
-
-    const response = await page.evaluate(() => {
-      const items = document.getElementsByClassName('fr-grid-item w4');
-      const links = [];
-      for (let i = 0; i < items.length; i++) {
-        const title =
-          items[i].children[0].childNodes[0].childNodes[3].childNodes[1]
-            .innerHTML;
-        const priceElement = items[i].children[0].childNodes[0].childNodes[3];
-        const price = priceElement
-          .querySelector('.fr-product-price')
-          .querySelector('.dual-price-original').innerText;
-        const salePrice = priceElement
-          .querySelector('.fr-product-price')
-          .querySelector('.price-limited').innerText;
-        const time = priceElement
-          .querySelector('.fr-product-price')
-          .querySelector('.fr-status-flag-text').innerText;
-        let url = items[i].firstChild.getAttribute('href');
-        if (url && url.indexOf('http') == -1) {
-          url = `https://www.uniqlo.com${url}`;
-        }
-        links.push({
-          code: url.split('?')[0].split('/').pop(),
-          title: title,
-          price: price,
-          salePrice: salePrice,
-          time: time,
-          url: url,
-        });
-      }
-      console.log(links);
-
-      return links;
-    });
-    console.log(response);
-
-    await browser.close();
-
-    return response;
-  }
-
   async crawlRandomSale(person: string, url: string): Promise<Cloth[]> {
+    if (!url) return [];
+
     const browser = await puppeteer.launch({
       //headless: false,
       executablePath: '/usr/bin/google-chrome',
@@ -100,8 +50,8 @@ export class CrawlerService {
 
           links.push({
             title: title,
-            price: price.replace('VND\n', ''),
-            salePrice: salePrice.replace('VND\n', ''),
+            price: Number(price.replace(/[^\d+]/g, '')),
+            salePrice: Number(salePrice.replace(/[^\d+]/g, '')),
             time: 'Random sale',
             url: url,
           });
@@ -124,6 +74,8 @@ export class CrawlerService {
   }
 
   async crawlDetails(url: string): Promise<Cloth> {
+    if (!url) return [];
+
     const browser = await puppeteer.launch({
       // headless: false,
       executablePath: '/usr/bin/google-chrome',
@@ -164,9 +116,11 @@ export class CrawlerService {
           )[0].children[1].innerText;
 
           if (price === 'price-limited') {
-            listSizeaColor.push(
-              `${curColor}-${curSize}-${curPrice.replace('VND\n', '')}`,
-            );
+            listSizeaColor.push({
+              color: curColor,
+              size: curSize,
+              price: Number(curPrice.replace(/[^\d+]/g, '')),
+            });
           }
         }
       }
@@ -185,8 +139,8 @@ export class CrawlerService {
       person: response.person,
       title: response.title,
       image: response.image,
-      price: '0',
-      salePrice: '0',
+      price: 0,
+      salePrice: 0,
       time: 'Now',
       url: url,
       code: url.split('?')[0].split('/').pop(),

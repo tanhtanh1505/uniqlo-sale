@@ -10,6 +10,6 @@ export class CreateFavoriteDto {
   @ApiProperty({ type: String, example: 'green' })
   color: string;
 
-  @ApiProperty({ type: String, example: '100' })
-  price: string;
+  @ApiProperty({ type: Number, example: 100000 })
+  price: number;
 }

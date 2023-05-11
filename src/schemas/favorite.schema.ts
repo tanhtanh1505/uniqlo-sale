@@ -25,7 +25,7 @@ export class Favorite {
   color: string;
 
   @Prop()
-  price: string;
+  price: number;
 }
 
 export const FavoriteSchema = SchemaFactory.createForClass(Favorite);

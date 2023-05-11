@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+import { SizeColor } from 'src/entity';
 
 export type ClothDocument = HydratedDocument<Cloth>;
 
@@ -12,16 +13,16 @@ export class Cloth {
   title: string;
 
   @Prop()
-  price: string;
-
-  @Prop()
-  salePrice: string;
-
-  @Prop()
   time: string;
 
   @Prop()
-  sizeColor: Array<string>;
+  price: number;
+
+  @Prop()
+  salePrice: number;
+
+  @Prop()
+  sizeColor: Array<SizeColor>;
 
   @Prop()
   url: string;

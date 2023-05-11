@@ -20,6 +20,6 @@ export class Favorite {
   @ApiProperty({ example: 'green', description: 'Size' })
   color: string;
 
-  @ApiProperty({ example: '100', description: 'The price' })
-  price: string;
+  @ApiProperty({ example: 1000000, description: 'The price' })
+  price: number;
 }

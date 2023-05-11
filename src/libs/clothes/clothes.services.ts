@@ -95,9 +95,11 @@ export class ClothesService {
             rootData.push([
               cloth.code,
               cloth.title,
-              cloth.price,
-              cloth.salePrice,
-              cloth.sizeColor.join('\n'),
+              cloth.price.toString(),
+              cloth.salePrice.toString(),
+              cloth.sizeColor
+                .map((sc) => `${sc.size} - ${sc.color} - ${sc.price}`)
+                .join('\n'),
               cloth.time,
               cloth.url,
               `=IMAGE("${cloth.image}")`,
@@ -109,7 +111,7 @@ export class ClothesService {
 
         await this.googleService.updateSheet(sheets, sheetId, person, rootData);
       }
-      return 'success';
+      return `https://docs.google.com/spreadsheets/d/${sheetId}`;
     } catch (e) {
       console.log(e);
       return 'fail';

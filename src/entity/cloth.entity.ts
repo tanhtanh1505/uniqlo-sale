@@ -1,5 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+export class SizeColor {
+  @ApiProperty({ example: 'M', description: 'Size' })
+  size: string;
+
+  @ApiProperty({ example: 'red', description: 'Color' })
+  color: string;
+
+  @ApiProperty({ example: 1, description: 'Price' })
+  price: number;
+}
+
 export class Cloth {
   @ApiProperty({ example: 'Man', description: 'Person' })
   person: string;
@@ -8,16 +19,19 @@ export class Cloth {
   title: string;
 
   @ApiProperty({ example: 1, description: 'The price' })
-  price: string;
+  price: number;
 
   @ApiProperty({ example: 1, description: 'The salePrice' })
-  salePrice: string;
+  salePrice: number;
 
   @ApiProperty({ example: 'Now', description: 'time sale' })
   time: string;
 
-  @ApiProperty({ example: ['M-red', 'L-green'], description: 'Size and color' })
-  sizeColor: Array<string>;
+  @ApiProperty({
+    example: [{ size: 'M', color: 'red', price: 1 }],
+    description: 'Size and color',
+  })
+  sizeColor: Array<SizeColor>;
 
   @ApiProperty({ example: 'https://hehe', description: 'Image' })
   image: string;

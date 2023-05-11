@@ -51,7 +51,7 @@ export class FavoritesService {
         continue;
       }
       for (const sizeColor of cloth.sizeColor) {
-        const [color, size, price] = sizeColor.split('-');
+        const { color, size, price } = sizeColor;
 
         if (
           favourite.size == size &&
