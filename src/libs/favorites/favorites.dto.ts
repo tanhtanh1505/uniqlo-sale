@@ -4,12 +4,6 @@ export class CreateFavoriteDto {
   @ApiProperty({ type: String, example: '123' })
   url: string;
 
-  @ApiProperty({ type: String, example: '123' })
-  code: string;
-
-  @ApiProperty({ type: String, example: 'Garfield' })
-  title: string;
-
   @ApiProperty({ type: String, example: 'M' })
   size: string;
 

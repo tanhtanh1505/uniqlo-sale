@@ -42,6 +42,7 @@ export class CrawlerService {
           url = `https://www.uniqlo.com${url}`;
         }
         links.push({
+          code: url.split('?')[0].split('/').pop(),
           title: title,
           price: price,
           salePrice: salePrice,
@@ -91,11 +92,6 @@ export class CrawlerService {
             items[i].children[0].childNodes[0].children[2].children[1]
               .innerText;
 
-          const image =
-            items[i].children[0].childNodes[0].children[0].getElementsByTagName(
-              'img',
-            )[0].src;
-
           let url = items[i].firstChild.getAttribute('href');
 
           if (url && url.indexOf('http') == -1) {
@@ -107,7 +103,6 @@ export class CrawlerService {
             price: price.replace('VND\n', ''),
             salePrice: salePrice.replace('VND\n', ''),
             time: 'Random sale',
-            image: image,
             url: url,
           });
         }
@@ -116,9 +111,11 @@ export class CrawlerService {
     });
 
     for (let i = 0; i < response.length; i++) {
-      const sizeColor = await this.crawlSizeColor(response[i].url);
-      response[i].sizeColor = sizeColor;
+      const detail = await this.crawlDetails(response[i].url);
+      response[i].sizeColor = detail.sizeColor;
       response[i].person = person;
+      response[i].image = detail.image;
+      response[i].code = detail.code;
     }
 
     await browser.close();
@@ -126,7 +123,7 @@ export class CrawlerService {
     return response;
   }
 
-  async crawlSizeColor(url: string) {
+  async crawlDetails(url: string): Promise<Cloth> {
     const browser = await puppeteer.launch({
       // headless: false,
       executablePath: '/usr/bin/google-chrome',
@@ -140,6 +137,12 @@ export class CrawlerService {
     const response = await page.evaluate(() => {
       const colors = document.getElementsByName('product-color-picker');
       const sizes = document.getElementsByName('product-size-picker');
+      const title = document.getElementsByClassName('fr-head h1')[0].innerText;
+      const image =
+        document.getElementsByClassName('fr-product-image')[0].children[1].src;
+      const person =
+        document.getElementsByClassName('fr-breadcrumbs')[0].children[1]
+          .innerText;
       const listSizeaColor = [];
 
       for (let i = 0; i < colors.length; i++) {
@@ -167,12 +170,27 @@ export class CrawlerService {
           }
         }
       }
-      return listSizeaColor;
+      return {
+        person: person,
+        title: title,
+        image: image,
+        listSizeaColor: listSizeaColor,
+      };
     });
     console.log(response);
 
     await browser.close();
 
-    return response;
+    return {
+      person: response.person,
+      title: response.title,
+      image: response.image,
+      price: '0',
+      salePrice: '0',
+      time: 'Now',
+      url: url,
+      code: url.split('?')[0].split('/').pop(),
+      sizeColor: response.listSizeaColor,
+    };
   }
 }

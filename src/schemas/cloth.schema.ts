@@ -28,6 +28,9 @@ export class Cloth {
 
   @Prop()
   image: string;
+
+  @Prop()
+  code: string;
 }
 
 export const ClothSchema = SchemaFactory.createForClass(Cloth);

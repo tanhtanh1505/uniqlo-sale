@@ -8,7 +8,10 @@ import {
 import { FavoritesService } from './favorites.services';
 import { CreateFavoriteDto } from './favorites.dto';
 import { Favorite } from 'src/entity/favorite.entity';
+import { Roles } from 'src/utils/roles/role.decorator';
+import { Role } from 'src/utils/roles/role.enum';
 
+@Roles(Role.User)
 @ApiBearerAuth()
 @ApiTags('favorites')
 @Controller('favorites')
@@ -30,5 +33,12 @@ export class FavoriteController {
     @Req() req,
   ): Promise<Favorite> {
     return await this.favoriteService.create(req, createFavorite);
+  }
+
+  @ApiOperation({ summary: 'Scan' })
+  @ApiResponse({ status: 200, type: [Favorite] })
+  @Get('scan')
+  async scan(): Promise<Favorite[]> {
+    return await this.favoriteService.scan();
   }
 }

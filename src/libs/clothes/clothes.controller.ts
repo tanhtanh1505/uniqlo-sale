@@ -1,7 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -16,9 +17,17 @@ import { CrawlClothResponse } from './clothes.dto';
 export class ClothesController {
   constructor(private clothesService: ClothesService) {}
 
+  @ApiOperation({ summary: 'Detail by url' })
+  @ApiResponse({ status: 200, type: Cloth })
+  @ApiQuery({ name: 'url', type: String, required: true })
+  @Get('find-by-url')
+  async findByUrl(@Query() q): Promise<Cloth> {
+    return await this.clothesService.crawlDetails(q.url);
+  }
+
   @ApiOperation({ summary: 'Find all' })
   @ApiResponse({ status: 200, type: Cloth })
-  @Get()
+  @Get('all')
   async findAll(): Promise<Cloth[]> {
     return this.clothesService.findAll();
   }

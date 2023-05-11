@@ -52,8 +52,8 @@ export class ClothesService {
     }
   }
 
-  async crawlSizeColor(url: string) {
-    return this.crawlerService.crawlSizeColor(url);
+  async crawlDetails(url: string): Promise<Cloth> {
+    return await this.crawlerService.crawlDetails(url);
   }
 
   async findAll(): Promise<Cloth[]> {
@@ -75,6 +75,7 @@ export class ClothesService {
           .slice(0, 10)} ${timeNow.toLocaleTimeString()}`;
 
         const columnTitles = [
+          'Code',
           'Title',
           'Price (VND)',
           'Sale Price',
@@ -92,6 +93,7 @@ export class ClothesService {
         if (tempClothes && tempClothes.length && tempClothes.length > 0) {
           tempClothes.forEach((cloth) => {
             rootData.push([
+              cloth.code,
               cloth.title,
               cloth.price,
               cloth.salePrice,

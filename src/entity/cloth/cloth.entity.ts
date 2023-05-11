@@ -24,4 +24,7 @@ export class Cloth {
 
   @ApiProperty({ example: 'https://hehe', description: 'Url' })
   url: string;
+
+  @ApiProperty({ example: '123', description: 'Code' })
+  code: string;
 }
