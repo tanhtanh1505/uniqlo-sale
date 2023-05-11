@@ -1,12 +1,24 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Req,
+  UseGuards,
+  Post,
+  HttpCode,
+  HttpStatus,
+  Body,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { GoogleAuthGuard } from './utils/guards';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthService } from './auth.services';
 
 @ApiBearerAuth()
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
+  constructor(private authService: AuthService) {}
+
   @Get()
   @UseGuards(GoogleAuthGuard)
   handleLogin() {
@@ -27,5 +39,11 @@ export class AuthController {
     } else {
       return { msg: 'Not Authenticated' };
     }
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('login')
+  signIn(@Body() req) {
+    return this.authService.signIn(req);
   }
 }

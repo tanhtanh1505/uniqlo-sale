@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail } from 'class-validator';
+import { Role } from 'src/utils/roles/role.enum';
 
 export class CreateUserDto {
   @IsEmail()
@@ -8,4 +9,7 @@ export class CreateUserDto {
 
   @ApiProperty({ type: String, required: true })
   displayName: string;
+
+  @ApiProperty({ type: Array<Role>, required: true })
+  roles: Role[];
 }

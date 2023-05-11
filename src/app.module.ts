@@ -21,15 +21,16 @@ import { AuthModule } from './libs/auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { FavoritesModule } from './libs/favorites/favorites.module';
 import { RolesGuard } from './utils/roles/role.guard';
+import { AuthGuard } from './libs/auth/auth.guard';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     ScheduleModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_URI),
+    UsersModule,
     AuthModule,
     ClothesModule,
-    UsersModule,
     CronModule,
     MailModule,
     UrlsModule,
@@ -42,6 +43,10 @@ import { RolesGuard } from './utils/roles/role.guard';
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
     },
     {
       provide: APP_GUARD,
