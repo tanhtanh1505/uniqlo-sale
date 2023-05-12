@@ -22,7 +22,12 @@ export class ClothesController {
   @ApiQuery({ name: 'url', type: String, required: true })
   @Get('find-by-url')
   async findByUrl(@Query() q): Promise<Cloth> {
-    return await this.clothesService.crawlDetails(q.url);
+    return await this.clothesService.findByUrl(q.url);
+  }
+
+  @Get('find-by-code')
+  async findByCode(@Query() q): Promise<Cloth> {
+    return await this.clothesService.findByUrl(q.code);
   }
 
   @ApiOperation({ summary: 'Find all' })

@@ -18,6 +18,7 @@ import {
   CompareFavoriteDto,
   CompareResponseDto,
   CreateFavoriteDto,
+  FavoriteResponseDto,
 } from './favorites.dto';
 import { Favorite } from 'src/entity/favorite.entity';
 import { Roles } from 'src/utils/roles/role.decorator';
@@ -33,7 +34,7 @@ export class FavoriteController {
   @ApiOperation({ summary: 'Get all favorites' })
   @ApiResponse({ status: 200 })
   @Get('all')
-  async getAllFavorite(@Req() req): Promise<Favorite[]> {
+  async getAllFavorite(@Req() req): Promise<FavoriteResponseDto[]> {
     return await this.favoriteService.findAll(req);
   }
 

@@ -5,6 +5,7 @@ import {
   CompareFavoriteDto,
   CompareResponseDto,
   CreateFavoriteDto,
+  FavoriteResponseDto,
 } from './favorites.dto';
 import { Favorite } from 'src/entity/favorite.entity';
 import { UsersService } from '../users/users.service';
@@ -73,8 +74,31 @@ export class FavoritesService {
     };
   }
 
-  async findAll(req): Promise<Favorite[]> {
-    return await this.favoriteModel.find({ user: req.user._id });
+  async findAll(req): Promise<FavoriteResponseDto[]> {
+    const res: FavoriteResponseDto[] = [];
+    const listFavorite = await this.favoriteModel.find({ user: req.user._id });
+    for (const favorite of listFavorite) {
+      const cloth = await this.clothesService.findByCode(favorite.code);
+      const sizeColor = cloth.sizeColor.find(
+        (sizeColor) =>
+          sizeColor.color == favorite.color && sizeColor.size == favorite.size,
+      );
+
+      res.push({
+        curPrice: cloth.price,
+        curSalePrice: sizeColor.price,
+        code: cloth.code,
+        color: favorite.color,
+        size: favorite.size,
+        price: favorite.price,
+        title: cloth.title,
+        image: cloth.image,
+        person: cloth.person,
+        sale: sizeColor.sale,
+        url: cloth.url,
+      });
+    }
+    return res;
   }
 
   async scan(): Promise<Favorite[]> {

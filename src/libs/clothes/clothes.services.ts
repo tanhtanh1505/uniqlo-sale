@@ -52,11 +52,12 @@ export class ClothesService {
     }
   }
 
-  async crawlDetails(url: string): Promise<Cloth> {
-    const code = url.split('?')[0].split('/').pop();
+  async crawlDetails(code: string): Promise<Cloth> {
     const cloth = await this.clothModel.findOne({ code });
     if (!cloth) {
-      const newCloth = await this.crawlerService.crawlDetails(url);
+      const newCloth = await this.crawlerService.crawlDetails(
+        `https://www.uniqlo.com/vn/vi/products/${code}`,
+      );
       await this.clothModel.create(newCloth);
       return newCloth;
     }
@@ -64,8 +65,17 @@ export class ClothesService {
     return cloth;
   }
 
+  async findByUrl(url: string): Promise<Cloth> {
+    const code = url.split('?')[0].split('/').pop();
+    return await this.crawlDetails(code);
+  }
+
   async findAll(): Promise<Cloth[]> {
-    return await this.clothModel.find().exec();
+    return await this.clothModel.find({ sale: true }).exec();
+  }
+
+  async findByCode(code: string): Promise<Cloth> {
+    return await this.clothModel.findOne({ code }).exec();
   }
 
   async saveToGoogleSheet() {
