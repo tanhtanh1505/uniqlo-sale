@@ -33,15 +33,7 @@ async function bootstrap() {
     .setTitle('Uniqlo Crawler API')
     .setDescription('The Uniqlo Crawler API description')
     .setVersion('1.1.0')
-    .addOAuth2({
-      type: 'oauth2',
-      flows: {
-        authorizationCode: {
-          authorizationUrl: `${process.env.WEB_HOST}/uniqlo/api/auth`,
-          scopes: {},
-        },
-      },
-    })
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/uniqlo/api', app, document);

@@ -23,7 +23,7 @@ export class ClothesService {
   async crawlRandomSale(): Promise<CrawlClothResponse[]> {
     try {
       const resultCrawl: CrawlClothResponse[] = [];
-      await this.clothModel.deleteMany({});
+      await this.clothModel.deleteMany({ sale: true });
 
       for (const person of Object.values(Person)) {
         const response = [];
@@ -53,7 +53,15 @@ export class ClothesService {
   }
 
   async crawlDetails(url: string): Promise<Cloth> {
-    return await this.crawlerService.crawlDetails(url);
+    const code = url.split('?')[0].split('/').pop();
+    const cloth = await this.clothModel.findOne({ code });
+    if (!cloth) {
+      const newCloth = await this.crawlerService.crawlDetails(url);
+      await this.clothModel.create(newCloth);
+      return newCloth;
+    }
+
+    return cloth;
   }
 
   async findAll(): Promise<Cloth[]> {

@@ -10,13 +10,7 @@ export class Favorite {
   user: User;
 
   @Prop()
-  url: string;
-
-  @Prop()
   code: string;
-
-  @Prop()
-  title: string;
 
   @Prop()
   size: string;

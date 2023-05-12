@@ -53,6 +53,7 @@ export class CrawlerService {
             price: Number(price.replace(/[^\d+]/g, '')),
             salePrice: Number(salePrice.replace(/[^\d+]/g, '')),
             time: 'Random sale',
+            sale: true,
             url: url,
           });
         }
@@ -103,9 +104,6 @@ export class CrawlerService {
 
         for (let j = 0; j < sizes.length; j++) {
           sizes[j].click();
-          setTimeout(() => {
-            console.log('');
-          }, 100);
           const curSize = sizes[j].parentElement.innerText;
 
           const price = document.getElementsByClassName(
@@ -115,13 +113,12 @@ export class CrawlerService {
             'price fr-no-uppercase',
           )[0].children[1].innerText;
 
-          if (price === 'price-limited') {
-            listSizeaColor.push({
-              color: curColor,
-              size: curSize,
-              price: Number(curPrice.replace(/[^\d+]/g, '')),
-            });
-          }
+          listSizeaColor.push({
+            sale: price === 'price-limited',
+            color: curColor,
+            size: curSize,
+            price: Number(curPrice.replace(/[^\d+]/g, '')),
+          });
         }
       }
       return {
@@ -142,6 +139,7 @@ export class CrawlerService {
       price: 0,
       salePrice: 0,
       time: 'Now',
+      sale: false,
       url: url,
       code: url.split('?')[0].split('/').pop(),
       sizeColor: response.listSizeaColor,

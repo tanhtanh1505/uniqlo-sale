@@ -32,6 +32,9 @@ export class Cloth {
 
   @Prop()
   code: string;
+
+  @Prop()
+  sale: boolean;
 }
 
 export const ClothSchema = SchemaFactory.createForClass(Cloth);

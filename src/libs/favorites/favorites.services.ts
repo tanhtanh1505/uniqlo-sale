@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateFavoriteDto } from './favorites.dto';
+import {
+  CompareFavoriteDto,
+  CompareResponseDto,
+  CreateFavoriteDto,
+} from './favorites.dto';
 import { Favorite } from 'src/entity/favorite.entity';
 import { UsersService } from '../users/users.service';
 import { ClothesService } from '../clothes/clothes.services';
@@ -16,14 +20,57 @@ export class FavoritesService {
   ) {}
 
   async create(req, favorite: CreateFavoriteDto): Promise<Favorite> {
-    const details = await this.clothesService.crawlDetails(favorite.url);
+    //find cloth, if not exist, create new
+    const cloth = await this.favoriteModel.findOne({
+      code: favorite.code,
+      color: favorite.color,
+      size: favorite.size,
+    });
+
+    if (cloth) {
+      if (cloth.price != favorite.price) {
+        cloth.price = favorite.price;
+        await cloth.save();
+      }
+      return cloth;
+    }
 
     return await this.favoriteModel.create({
       user: req.user._id,
-      code: details.code,
-      title: details.title,
       ...favorite,
     });
+  }
+
+  async delete(req, favorite: CreateFavoriteDto): Promise<boolean> {
+    await this.favoriteModel.findOneAndDelete({
+      user: req.user._id,
+      code: favorite.code,
+      color: favorite.color,
+      size: favorite.size,
+    });
+
+    return true;
+  }
+
+  async compare(
+    req,
+    favorite: CompareFavoriteDto,
+  ): Promise<CompareResponseDto> {
+    const cloth = await this.favoriteModel.findOne({
+      code: favorite.code,
+      color: favorite.color,
+      size: favorite.size,
+    });
+
+    if (!cloth)
+      return {
+        exist: false,
+        price: 0,
+      };
+    return {
+      exist: true,
+      price: cloth.price,
+    };
   }
 
   async findAll(req): Promise<Favorite[]> {

@@ -9,6 +9,9 @@ export class SizeColor {
 
   @ApiProperty({ example: 1, description: 'Price' })
   price: number;
+
+  @ApiProperty({ example: true, description: 'Sale' })
+  sale: boolean;
 }
 
 export class Cloth {
@@ -28,7 +31,7 @@ export class Cloth {
   time: string;
 
   @ApiProperty({
-    example: [{ size: 'M', color: 'red', price: 1 }],
+    example: [{ size: 'M', color: 'red', price: 1, sale: true }],
     description: 'Size and color',
   })
   sizeColor: Array<SizeColor>;
@@ -41,4 +44,7 @@ export class Cloth {
 
   @ApiProperty({ example: '123', description: 'Code' })
   code: string;
+
+  @ApiProperty({ example: true, description: 'Sale' })
+  sale: boolean;
 }
