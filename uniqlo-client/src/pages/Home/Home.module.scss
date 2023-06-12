@@ -1,0 +1,24 @@
+.wrapper {
+   display: flex;
+   flex-direction: column;
+}
+
+.notification {
+   background-color: rgb(254 252 232);
+   color: rgb(133 77 14);
+   padding: 16px;
+   max-width: 800px;
+}
+
+.databases {
+   margin-top: 16px;
+}
+
+.new-btn {
+   margin-top: 16px;
+   text-align: end;
+}
+
+.history {
+   margin-top: 16px;
+}

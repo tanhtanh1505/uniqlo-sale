@@ -1,0 +1,15 @@
+.wrapper {
+   width: 70%;
+}
+
+.title {
+   margin-top: 20px;
+}
+
+.list_sale {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: space-around;
+   margin-top: 30px;
+   // border: 1px solid #ccc;
+}

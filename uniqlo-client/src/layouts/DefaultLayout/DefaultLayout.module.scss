@@ -1,0 +1,11 @@
+.wrapper {
+   display: flex;
+}
+
+.container {
+   display: flex;
+   justify-content: center;
+   margin-top: var(--default-header-height);
+   width: 100%;
+   padding: 8px 32px;
+}
