@@ -3,7 +3,7 @@
 // const cx = classNames.bind(styles);
 
 function Home() {
-   return <h1>Homeee</h1>;
+   return <h1>Home v1.1 - Active cron job</h1>;
 }
 
 export default Home;

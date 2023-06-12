@@ -6,6 +6,8 @@ export class MailService {
   constructor(private mailerService: MailerService) {}
 
   async sendMailNotiSale(mails: string[]) {
+    // trans to set
+    mails = [...new Set(mails)];
     for (let i = 0; i < mails.length; i++) {
       await this.mailerService.sendMail({
         to: mails[i],
@@ -13,7 +15,8 @@ export class MailService {
         subject: 'Uniqlo Sale Off!',
         template: './notiSale', // `.hbs` extension is appended automatically
         context: {
-          url: `https://docs.google.com/spreadsheets/d/${process.env.SHEET_CLOTHES}/edit#gid=0`,
+          sheet: `https://docs.google.com/spreadsheets/d/${process.env.SHEET_CLOTHES}/edit#gid=0`,
+          web: 'https://uniqlo.roofy.site/list-sale',
         },
       });
     }

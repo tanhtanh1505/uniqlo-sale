@@ -6,8 +6,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CronService } from './cron.service';
+import { Roles } from 'src/utils/roles/role.decorator';
+import { Role } from 'src/utils/roles/role.enum';
 
 @ApiBearerAuth()
+@Roles(Role.Admin)
 @ApiTags('cron')
 @Controller('cron')
 export class CronController {
@@ -27,5 +30,13 @@ export class CronController {
   async deleteCron(): Promise<string> {
     this.cronService.deleteCron();
     return 'Deleted';
+  }
+
+  @ApiOperation({ summary: 'Test job' })
+  @ApiResponse({ status: 200 })
+  @Get('test')
+  async testJob(): Promise<string> {
+    this.cronService.testJob();
+    return 'Tested';
   }
 }

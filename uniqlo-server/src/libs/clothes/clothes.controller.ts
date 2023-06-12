@@ -10,6 +10,8 @@ import {
 import { Cloth } from 'src/entity';
 import { ClothesService } from './clothes.services';
 import { CrawlClothResponse } from './clothes.dto';
+import { Roles } from 'src/utils/roles/role.decorator';
+import { Role } from 'src/utils/roles/role.enum';
 
 @ApiBearerAuth()
 @ApiTags('clothes')
@@ -39,6 +41,7 @@ export class ClothesController {
 
   @ApiOperation({ summary: 'Crawl' })
   @ApiResponse({ status: 200, type: CrawlClothResponse })
+  @Roles(Role.Admin)
   @Get('crawl-random-sale')
   async crawlRandomSale(): Promise<CrawlClothResponse[]> {
     return await this.clothesService.crawlRandomSale();
@@ -46,6 +49,7 @@ export class ClothesController {
 
   @ApiOperation({ summary: 'Save to google sheet' })
   @ApiResponse({ status: 200 })
+  @Roles(Role.Admin)
   @Get('save')
   async saveToGoogleSheet(): Promise<string> {
     return await this.clothesService.saveToGoogleSheet();
