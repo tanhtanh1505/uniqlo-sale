@@ -13,6 +13,9 @@ export class User {
   displayName: string;
 
   @Prop()
+  remainingMail: number;
+
+  @Prop()
   roles: Role[];
 }
 

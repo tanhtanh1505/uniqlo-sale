@@ -26,6 +26,30 @@ export class ClothesController {
     return await this.clothesService.findByUrl(q.url);
   }
 
+  @ApiOperation({ summary: 'Check cloth if exist with conditions' })
+  @ApiResponse({ status: 200, type: Boolean })
+  @ApiQuery({ name: 'code', type: String, required: true })
+  @ApiQuery({ name: 'sale', type: Boolean, required: true })
+  @ApiQuery({ name: 'color', type: String, required: true })
+  @ApiQuery({ name: 'size', type: String, required: true })
+  @ApiQuery({ name: 'price', type: Number, required: true })
+  @Get('check-if-exist')
+  async checkIfExist(@Query() q): Promise<boolean> {
+    const parsedPrice = parseInt(q.price);
+    const parsedSale = q.sale === 'true' ? true : false;
+
+    return await this.clothesService.checkIfExist(
+      q.code,
+      parsedSale,
+      q.color,
+      q.size,
+      parsedPrice,
+    );
+  }
+
+  @ApiOperation({ summary: 'Detail by code' })
+  @ApiResponse({ status: 200, type: Cloth })
+  @ApiQuery({ name: 'code', type: String, required: true })
   @Get('find-by-code')
   async findByCode(@Query() q): Promise<Cloth> {
     return await this.clothesService.findByUrl(q.code);

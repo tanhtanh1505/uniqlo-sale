@@ -1,9 +1,29 @@
-<p>Hello,</p>
-<p>Uniqlo has been updated list sale off!</p>
+<p>Hello,{{name}}</p>
+<p>Your favorite cloth has been sale!</p>
+
+<p>Here is the detail:</p>
+
+<table>
+    <tr>
+        <th>Code</th>
+        <th>Color</th>
+        <th>Size</th>
+        <th>Price</th>
+    </tr>
+    {{#each products}}
+    <tr>
+        <td>{{this.code}}</td>
+        <td>{{this.color}}</td>
+        <td>{{this.size}}</td>
+        <td>{{this.price}}</td>
+    </tr>
+    {{/each}}
+</table>
+
 <p>
     - <a href="{{ sheet }}">Click here to view in sheet</a>
     <br>
-    - <a href="{{ web }}">Or in web</a>
+    - <a href="{{ web }}">Or in website</a>
 </p>
 
 <p>If you did not request this email you can safely ignore it.</p>

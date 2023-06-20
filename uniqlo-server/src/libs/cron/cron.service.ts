@@ -20,33 +20,19 @@ export class CronService {
   }
 
   async jobCrawlSale() {
-    const responseCrawl = await this.clothesService.crawlRandomSale();
-    let updated = false;
+    await this.clothesService.crawlRandomSale();
+    await this.clothesService.saveToGoogleSheet();
 
-    for (const res of responseCrawl) {
-      if (res.numberCrawled > 0) {
-        updated = true;
-        break;
-      }
-    }
-
-    if (updated) {
-      await this.clothesService.saveToGoogleSheet();
-      const reportScan = await this.favoriteService.scan();
-      const listMailUser = [];
-
-      for (let i = 0; i < reportScan.length; i++) {
-        const user = await this.userService.findOne(reportScan[i].user);
-        listMailUser.push(user.email);
-      }
-
-      await this.mailService.sendMailNotiSale(listMailUser);
+    const reportScan = await this.favoriteService.scan();
+    for (let i = 0; i < reportScan.length; i++) {
+      await this.mailService.sendMailNotiSale(reportScan[i]);
+      await this.userService.updateRemainingMail(reportScan[i].user);
     }
   }
 
   addCronJob() {
     const job = new CronJob(
-      CronExpression.EVERY_HOUR,
+      CronExpression.EVERY_2_HOURS,
       async () => {
         this.logger.warn(`Job added to run!`);
         await this.jobCrawlSale();

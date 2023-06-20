@@ -19,6 +19,7 @@ import {
   CompareResponseDto,
   CreateFavoriteDto,
   FavoriteResponseDto,
+  FavoriteScanResDto,
 } from './favorites.dto';
 import { Favorite } from 'src/entity/favorite.entity';
 import { Roles } from 'src/utils/roles/role.decorator';
@@ -61,7 +62,7 @@ export class FavoriteController {
   @ApiOperation({ summary: 'Scan' })
   @ApiResponse({ status: 200, type: [Favorite] })
   @Get('scan')
-  async scan(): Promise<Favorite[]> {
+  async scan(): Promise<FavoriteScanResDto[]> {
     return await this.favoriteService.scan();
   }
 

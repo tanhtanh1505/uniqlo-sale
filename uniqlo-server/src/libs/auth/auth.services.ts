@@ -39,6 +39,7 @@ export class AuthService {
       user = await this.userService.create({
         email: payload.email,
         displayName: payload.name,
+        remainingMail: 10,
         roles: [Role.User],
       });
     }

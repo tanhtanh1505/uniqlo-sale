@@ -25,7 +25,6 @@ export class ClothesService {
       const resultCrawl: CrawlClothResponse[] = [];
 
       const response = [];
-      console.log('crawl random sale');
       for (const person of Object.values(Person)) {
         const urls = await this.urlService.getUrlByPerson(person);
         let count = 0;
@@ -85,6 +84,35 @@ export class ClothesService {
     return await this.clothModel.find({ sale: true }).exec();
   }
 
+  async checkIfExist(
+    code: string,
+    sale: boolean,
+    color: string,
+    size: string,
+    price: number,
+  ): Promise<boolean> {
+    const cloth = await this.clothModel
+      .findOne({
+        code: code,
+        sale: sale,
+        sizeColor: {
+          $elemMatch: {
+            sale: sale,
+            color: color,
+            size: size,
+            price: { $lte: price },
+          },
+        },
+      })
+      .exec();
+
+    if (cloth) {
+      return true;
+    }
+
+    return false;
+  }
+
   async findByCode(code: string): Promise<Cloth> {
     return await this.clothModel.findOne({ code }).exec();
   }
@@ -118,7 +146,6 @@ export class ClothesService {
 
         const tempClothes = await this.clothModel.find({ person });
 
-        console.log(tempClothes);
         if (tempClothes && tempClothes.length && tempClothes.length > 0) {
           tempClothes.forEach((cloth) => {
             rootData.push([

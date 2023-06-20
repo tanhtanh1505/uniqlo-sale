@@ -36,7 +36,7 @@ export class CronController {
   @ApiResponse({ status: 200 })
   @Get('test')
   async testJob(): Promise<string> {
-    this.cronService.testJob();
+    await this.cronService.testJob();
     return 'Tested';
   }
 }

@@ -10,6 +10,9 @@ export class CreateUserDto {
   @ApiProperty({ type: String, required: true })
   displayName: string;
 
+  @ApiProperty({ type: Number, required: true })
+  remainingMail: number;
+
   @ApiProperty({ type: Array<Role>, required: true })
   roles: Role[];
 }

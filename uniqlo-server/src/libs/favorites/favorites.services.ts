@@ -6,11 +6,11 @@ import {
   CompareResponseDto,
   CreateFavoriteDto,
   FavoriteResponseDto,
+  FavoriteScanResDto,
 } from './favorites.dto';
 import { Favorite } from 'src/entity/favorite.entity';
 import { UsersService } from '../users/users.service';
 import { ClothesService } from '../clothes/clothes.services';
-import { Cloth } from 'src/entity';
 
 @Injectable()
 export class FavoritesService {
@@ -101,38 +101,35 @@ export class FavoritesService {
     return res;
   }
 
-  async scan(): Promise<Favorite[]> {
+  async scan(): Promise<FavoriteScanResDto[]> {
     const users = await this.userService.findAll();
-    const clothes = await this.clothesService.findAll();
-    const res: Favorite[] = [];
+
+    const res: FavoriteScanResDto[] = [];
     for (const user of users) {
       const favorites = await this.favoriteModel.find({ user: user });
+
+      const saleCloths: Favorite[] = [];
       for (const favorite of favorites) {
-        console.log('SCAN', favorite);
-        const exist = await this.check(clothes, favorite);
-        if (exist) res.push(favorite);
+        const exist = await this.clothesService.checkIfExist(
+          favorite.code,
+          true,
+          favorite.color,
+          favorite.size,
+          favorite.price,
+        );
+        if (exist) saleCloths.push(favorite);
+      }
+
+      if (saleCloths.length > 0) {
+        res.push({
+          user: user,
+          saleCloths: saleCloths,
+        });
       }
     }
+
+    console.log(res);
+
     return res;
-  }
-
-  async check(clothes: Cloth[], favourite: Favorite): Promise<boolean> {
-    for (const cloth of clothes) {
-      if (cloth.code != favourite.code) {
-        continue;
-      }
-      for (const sizeColor of cloth.sizeColor) {
-        const { color, size, price } = sizeColor;
-
-        if (
-          favourite.size == size &&
-          favourite.color == color &&
-          favourite.price >= price
-        ) {
-          return true;
-        }
-      }
-    }
-    return false;
   }
 }

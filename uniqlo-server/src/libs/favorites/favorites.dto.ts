@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Favorite } from 'src/entity/favorite.entity';
+import { User } from 'src/entity/user.entity';
 
 export class CreateFavoriteDto {
   @ApiProperty({ type: String, example: '123' })
@@ -69,4 +71,12 @@ export class FavoriteResponseDto {
 
   @ApiProperty({ type: Boolean, example: true })
   sale: boolean;
+}
+
+export class FavoriteScanResDto {
+  @ApiProperty({ type: User, example: '123@gmail.com' })
+  user: User;
+
+  @ApiProperty({ type: Array, example: [] })
+  saleCloths: Array<Favorite>;
 }

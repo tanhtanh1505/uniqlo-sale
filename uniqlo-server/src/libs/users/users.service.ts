@@ -32,4 +32,11 @@ export class UsersService {
   async findAll(): Promise<User[]> {
     return await this.userModel.find();
   }
+
+  async updateRemainingMail(user: User) {
+    await this.userModel.findOneAndUpdate(
+      { email: user.email },
+      { remainingMail: user.remainingMail - 1 },
+    );
+  }
 }
