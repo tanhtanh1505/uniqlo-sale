@@ -153,14 +153,20 @@ function AddFavorite() {
                   <>
                      <div className={cx('product')}>
                         <div className={cx('product_img')}>
-                           <img src={product.image} alt="" />
+                           <a href={product.url}>
+                              <img src={product.image} alt="" />
+                           </a>
                         </div>
                         <div className={cx('product_detail')}>
                            <div className={cx('')}>
-                              <h1>{product.title}</h1>
+                              <h1>
+                                 <a href={product.url}> {product.title}</a>
+                              </h1>
                            </div>
                            <div className={cx('product_sale')}>
-                              <h3 className={cx('product_sale_old')}>{product.price} VND</h3>
+                              <h3 className={cx('product_sale_old')}>
+                                 {product.price === product.salePrice ? '' : `${product.price} VND`}
+                              </h3>
                               <h1 className={cx('product_sale_new')}>
                                  {product.sale ? `${product.salePrice} VND` : ''}
                               </h1>

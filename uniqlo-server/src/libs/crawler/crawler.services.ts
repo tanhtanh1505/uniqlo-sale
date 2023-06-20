@@ -132,14 +132,15 @@ export class CrawlerService {
 
     await browser.close();
 
+    // Mac dinh, crawl 1 san pham chua biet sale hay khong
     return {
       person: response.person,
       title: response.title,
       image: response.image,
-      price: 0,
-      salePrice: 0,
+      price: response.listSizeaColor[0].price,
+      salePrice: response.listSizeaColor[0].price,
       time: 'Now',
-      sale: false,
+      sale: response.listSizeaColor[0].sale,
       url: url,
       code: url.split('?')[0].split('/').pop(),
       sizeColor: response.listSizeaColor,

@@ -23,11 +23,12 @@ export class ClothesService {
   async crawlRandomSale(): Promise<CrawlClothResponse[]> {
     try {
       const resultCrawl: CrawlClothResponse[] = [];
-      await this.clothModel.deleteMany({ sale: true });
 
+      const response = [];
+      console.log('crawl random sale');
       for (const person of Object.values(Person)) {
-        const response = [];
         const urls = await this.urlService.getUrlByPerson(person);
+        let count = 0;
         console.log(urls);
         for (const url of urls) {
           const tempRes = await this.crawlerService.crawlRandomSale(
@@ -35,15 +36,25 @@ export class ClothesService {
             url,
           );
           response.push(...tempRes);
-          this.clothModel.insertMany(tempRes);
+          count += tempRes.length;
         }
 
         const res: CrawlClothResponse = {
           person: person,
-          numberCrawled: response.length,
+          numberCrawled: count,
         };
 
         resultCrawl.push(res);
+      }
+
+      await this.clothModel.deleteMany({ sale: true });
+
+      for (const cloth of response) {
+        await this.clothModel.findOneAndUpdate({ code: cloth.code }, cloth, {
+          upsert: true,
+          new: true,
+          setDefaultsOnInsert: true,
+        });
       }
 
       return resultCrawl;
