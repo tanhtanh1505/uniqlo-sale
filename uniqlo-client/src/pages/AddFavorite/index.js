@@ -76,6 +76,11 @@ function AddFavorite() {
          price: expectedPrice,
       };
 
+      if (!localStorage.getItem('token')) {
+         toast.error('Please login to add favorite');
+         return;
+      }
+
       axios
          .post(`${config.api.url}/favorites/add`, data, {
             headers: {

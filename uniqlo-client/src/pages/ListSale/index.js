@@ -13,11 +13,7 @@ function ListSale() {
    const [favorite, setFavorite] = useState([]);
    useEffect(() => {
       axios
-         .get(`${config.api.url}/clothes/all`, {
-            headers: {
-               Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
-         })
+         .get(`${config.api.url}/clothes/all`)
          .then((response) => {
             setFavorite(response.data);
          })

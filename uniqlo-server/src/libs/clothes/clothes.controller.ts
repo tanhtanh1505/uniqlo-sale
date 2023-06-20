@@ -13,7 +13,6 @@ import { CrawlClothResponse } from './clothes.dto';
 import { Roles } from 'src/utils/roles/role.decorator';
 import { Role } from 'src/utils/roles/role.enum';
 
-@ApiBearerAuth()
 @ApiTags('clothes')
 @Controller('clothes')
 export class ClothesController {
@@ -39,6 +38,7 @@ export class ClothesController {
     return this.clothesService.findAll();
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Crawl' })
   @ApiResponse({ status: 200, type: CrawlClothResponse })
   @Roles(Role.Admin)
@@ -47,6 +47,7 @@ export class ClothesController {
     return await this.clothesService.crawlRandomSale();
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Save to google sheet' })
   @ApiResponse({ status: 200 })
   @Roles(Role.Admin)
