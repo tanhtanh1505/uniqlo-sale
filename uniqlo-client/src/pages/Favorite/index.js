@@ -12,6 +12,11 @@ const cx = classNames.bind(styles);
 function Favorite() {
    const [favorite, setFavorite] = useState([]);
    useEffect(() => {
+      if (!localStorage.getItem('token')) {
+         toast.error('Please login to use this feature');
+         return;
+      }
+
       axios
          .get(`${config.api.url}/favorites/all`, {
             headers: {

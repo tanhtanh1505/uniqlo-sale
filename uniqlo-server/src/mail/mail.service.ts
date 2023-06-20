@@ -1,6 +1,5 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import { Favorite } from 'src/entity/favorite.entity';
 import { FavoriteScanResDto } from 'src/libs/favorites/favorites.dto';
 
 @Injectable()
