@@ -3,7 +3,7 @@
 // const cx = classNames.bind(styles);
 
 function Home() {
-   return <h1>Home v1.2.1 - Optimize algorithm scan</h1>;
+   return <h1>Home v1.3.1 - Create logger</h1>;
 }
 
 export default Home;
