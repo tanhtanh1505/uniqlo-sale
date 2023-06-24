@@ -5,6 +5,8 @@ import { ClothesService } from '../clothes/clothes.services';
 import { FavoritesService } from '../favorites/favorites.services';
 import { UsersService } from '../users/users.service';
 import { MailService } from 'src/mail/mail.service';
+import { LoggersService } from '../loggers/loggers.service';
+import { LoggerType } from 'src/utils/enums';
 
 @Injectable()
 export class CronService {
@@ -15,19 +17,27 @@ export class CronService {
     private clothesService: ClothesService,
     private mailService: MailService,
     private userService: UsersService,
+    private loggerService: LoggersService,
   ) {
     // this.addCronJob();
   }
 
   async jobCrawlSale() {
-    await this.clothesService.crawlRandomSale();
-    await this.clothesService.saveToGoogleSheet();
+    await this.loggerService.createLog({
+      type: LoggerType.Crawl,
+      content: 'start crawl sale',
+    });
 
-    const reportScan = await this.favoriteService.scan();
-    for (let i = 0; i < reportScan.length; i++) {
-      await this.mailService.sendMailNotiSale(reportScan[i]);
-      await this.userService.updateRemainingMail(reportScan[i].user);
-    }
+    await this.loggerService.getNumberOfLogsToday([LoggerType.Crawl]);
+
+    // await this.clothesService.crawlRandomSale();
+    // await this.clothesService.saveToGoogleSheet();
+
+    // const reportScan = await this.favoriteService.scan();
+    // for (let i = 0; i < reportScan.length; i++) {
+    //   await this.mailService.sendMailNotiSale(reportScan[i]);
+    //   await this.userService.updateRemainingMail(reportScan[i].user);
+    // }
   }
 
   addCronJob() {

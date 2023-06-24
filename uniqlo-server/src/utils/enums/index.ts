@@ -4,3 +4,8 @@ export enum Person {
   Kids = 'kids',
   Baby = 'baby',
 }
+
+export enum LoggerType {
+  Mail = 'mail',
+  Crawl = 'crawl',
+}

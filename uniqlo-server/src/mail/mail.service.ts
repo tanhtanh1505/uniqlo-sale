@@ -1,13 +1,26 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { FavoriteScanResDto } from 'src/libs/favorites/favorites.dto';
+import { LoggersService } from 'src/libs/loggers/loggers.service';
+import { LoggerType } from 'src/utils/enums';
 
 @Injectable()
 export class MailService {
-  constructor(private mailerService: MailerService) {}
+  constructor(
+    private mailerService: MailerService,
+    private loggerService: LoggersService,
+  ) {}
 
   async sendMailNotiSale(detail: FavoriteScanResDto) {
     if (detail.user.remainingMail <= 0) {
+      return;
+    }
+
+    const numberMailSent = await this.loggerService.getNumberOfLogsToday([
+      LoggerType.Mail,
+    ]);
+
+    if (numberMailSent >= 50) {
       return;
     }
 
@@ -32,6 +45,11 @@ export class MailService {
         web: process.env.WEB_HOST,
       },
     });
+
+    await this.loggerService.createLog({
+      type: LoggerType.Mail,
+      content: `send mail to ${detail.user.email}`,
+    });
   }
 
   async sendMailRegisted(mail: string) {
@@ -43,6 +61,11 @@ export class MailService {
       context: {
         url: process.env.WEB_HOST,
       },
+    });
+
+    await this.loggerService.createLog({
+      type: LoggerType.Mail,
+      content: `send mail to ${mail}`,
     });
   }
 }

@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
+import { LoggersModule } from 'src/libs/loggers/loggers.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ConfigModule } from '@nestjs/config';
         },
       }),
     }),
+    LoggersModule,
   ],
   providers: [MailService],
   exports: [MailService], // 👈 export for DI

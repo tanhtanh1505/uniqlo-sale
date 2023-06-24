@@ -24,6 +24,7 @@ import { RolesGuard } from './utils/roles/role.guard';
 import { AuthGuard } from './libs/auth/auth.guard';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { LoggersModule } from './libs/loggers/loggers.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { join } from 'path';
     MailModule,
     UrlsModule,
     FavoritesModule,
+    LoggersModule,
     PassportModule.register({ session: true }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'build'),
