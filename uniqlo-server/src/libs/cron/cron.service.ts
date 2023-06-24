@@ -28,16 +28,19 @@ export class CronService {
       content: 'start crawl sale',
     });
 
-    await this.loggerService.getNumberOfLogsToday([LoggerType.Crawl]);
+    await this.clothesService.crawlRandomSale();
+    await this.clothesService.saveToGoogleSheet();
 
-    // await this.clothesService.crawlRandomSale();
-    // await this.clothesService.saveToGoogleSheet();
+    const reportScan = await this.favoriteService.scan();
+    for (let i = 0; i < reportScan.length; i++) {
+      await this.mailService.sendMailNotiSale(reportScan[i]);
+      await this.userService.updateRemainingMail(reportScan[i].user);
+    }
 
-    // const reportScan = await this.favoriteService.scan();
-    // for (let i = 0; i < reportScan.length; i++) {
-    //   await this.mailService.sendMailNotiSale(reportScan[i]);
-    //   await this.userService.updateRemainingMail(reportScan[i].user);
-    // }
+    await this.loggerService.createLog({
+      type: LoggerType.Crawl,
+      content: 'finish crawl sale',
+    });
   }
 
   addCronJob() {
