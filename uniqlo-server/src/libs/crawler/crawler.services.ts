@@ -92,6 +92,12 @@ export class CrawlerService {
         const person =
           document.getElementsByClassName('fr-breadcrumbs')[0].children[1]
             .textContent;
+
+        // price before sale
+        const oldPrice = document.getElementsByClassName(
+          'price fr-no-uppercase',
+        )[0].children[0].textContent;
+
         const listSizeaColor = [];
 
         for (let i = 0; i < colors.length; i++) {
@@ -105,9 +111,10 @@ export class CrawlerService {
             const price = document.getElementsByClassName(
               'price fr-no-uppercase',
             )[0].children[1].className;
+
             const curPrice = document.getElementsByClassName(
               'price fr-no-uppercase',
-            )[0].children[1].innerHTML;
+            )[0].children[1].textContent;
 
             listSizeaColor.push({
               sale: price === 'price-limited',
@@ -121,6 +128,7 @@ export class CrawlerService {
           person: person,
           title: title,
           image: image,
+          price: oldPrice !== '' ? Number(oldPrice.replace(/[^\d+]/g, '')) : 0,
           listSizeaColor: listSizeaColor,
         };
       } catch (e) {
@@ -138,7 +146,7 @@ export class CrawlerService {
       person: response.person,
       title: response.title,
       image: response.image,
-      price: response.listSizeaColor[0].price,
+      price: response.price,
       salePrice: response.listSizeaColor[0].price,
       time: 'Now',
       sale: response.listSizeaColor[0].sale,
