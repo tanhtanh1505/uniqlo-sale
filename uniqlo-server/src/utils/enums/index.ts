@@ -8,4 +8,5 @@ export enum Person {
 export enum LoggerType {
   Mail = 'mail',
   Crawl = 'crawl',
+  ERROR = 'error',
 }

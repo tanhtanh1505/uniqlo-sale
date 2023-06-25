@@ -11,13 +11,13 @@ import { CrawlClothResponse } from './clothes.dto';
 
 @Injectable()
 export class ClothesService {
-  private readonly crawlerService: CrawlerService = new CrawlerService();
   private readonly logger = new Logger(ClothesService.name);
   private googleService = new GoogleService();
 
   constructor(
     @InjectModel(Cloth.name) private clothModel: Model<Cloth>,
     private readonly urlService: UrlsService,
+    private readonly crawlerService: CrawlerService,
   ) {}
 
   async crawlRandomSale(): Promise<CrawlClothResponse[]> {
