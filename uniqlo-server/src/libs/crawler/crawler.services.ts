@@ -26,36 +26,40 @@ export class CrawlerService {
       const items = document.getElementsByClassName('fr-grid-item w4');
       const links = [];
       for (let i = 0; i < items.length; i++) {
-        const hasSaleTag =
-          items[i].children[0].childNodes[0].children[2].children[2]
-            .children[1];
-        if (hasSaleTag) {
-          const price =
+        try {
+          const hasSaleTag =
             items[i].children[0].childNodes[0].children[2].children[2]
-              .children[0].children[0].children[0].innerText;
+              .children[1];
+          if (hasSaleTag) {
+            const price =
+              items[i].children[0].childNodes[0].children[2].children[2]
+                .children[0].children[0].children[0].innerText;
 
-          const salePrice =
-            items[i].children[0].childNodes[0].children[2].children[2]
-              .children[0].children[0].children[1].innerText;
+            const salePrice =
+              items[i].children[0].childNodes[0].children[2].children[2]
+                .children[0].children[0].children[1].innerText;
 
-          const title =
-            items[i].children[0].childNodes[0].children[2].children[1]
-              .innerText;
+            const title =
+              items[i].children[0].childNodes[0].children[2].children[1]
+                .innerText;
 
-          let url = items[i].firstChild.getAttribute('href');
+            let url = items[i].firstChild.getAttribute('href');
 
-          if (url && url.indexOf('http') == -1) {
-            url = `https://www.uniqlo.com${url}`;
+            if (url && url.indexOf('http') == -1) {
+              url = `https://www.uniqlo.com${url}`;
+            }
+
+            links.push({
+              title: title,
+              price: Number(price.replace(/[^\d+]/g, '')),
+              salePrice: Number(salePrice.replace(/[^\d+]/g, '')),
+              time: 'Random sale',
+              sale: true,
+              url: url,
+            });
           }
-
-          links.push({
-            title: title,
-            price: Number(price.replace(/[^\d+]/g, '')),
-            salePrice: Number(salePrice.replace(/[^\d+]/g, '')),
-            time: 'Random sale',
-            sale: true,
-            url: url,
-          });
+        } catch (e) {
+          console.log(e);
         }
       }
       return links;
