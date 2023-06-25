@@ -26,40 +26,19 @@ export class CrawlerService {
       const items = document.getElementsByClassName('fr-grid-item w4');
       const links = [];
       for (let i = 0; i < items.length; i++) {
-        try {
-          const hasSaleTag =
-            items[i].children[0].childNodes[0].children[2].children[2]
-              .children[1];
-          if (hasSaleTag) {
-            const price =
-              items[i].children[0].childNodes[0].children[2].children[2]
-                .children[0].children[0].children[0].innerText;
+        const hasSaleTag = items[i].getElementsByClassName('price-limited')[0];
+        if (hasSaleTag) {
+          let url = items[i].firstChild.getAttribute('href');
 
-            const salePrice =
-              items[i].children[0].childNodes[0].children[2].children[2]
-                .children[0].children[0].children[1].innerText;
-
-            const title =
-              items[i].children[0].childNodes[0].children[2].children[1]
-                .innerText;
-
-            let url = items[i].firstChild.getAttribute('href');
-
-            if (url && url.indexOf('http') == -1) {
-              url = `https://www.uniqlo.com${url}`;
-            }
-
-            links.push({
-              title: title,
-              price: Number(price.replace(/[^\d+]/g, '')),
-              salePrice: Number(salePrice.replace(/[^\d+]/g, '')),
-              time: 'Random sale',
-              sale: true,
-              url: url,
-            });
+          if (url && url.indexOf('http') == -1) {
+            url = `https://www.uniqlo.com${url}`;
           }
-        } catch (e) {
-          console.log(e);
+
+          links.push({
+            time: 'Random sale',
+            sale: true,
+            url: url,
+          });
         }
       }
       return links;
@@ -67,10 +46,8 @@ export class CrawlerService {
 
     for (let i = 0; i < response.length; i++) {
       const detail = await this.crawlDetails(response[i].url);
-      response[i].sizeColor = detail.sizeColor;
+      response[i] = { ...response[i], ...detail };
       response[i].person = person;
-      response[i].image = detail.image;
-      response[i].code = detail.code;
     }
 
     await browser.close();
