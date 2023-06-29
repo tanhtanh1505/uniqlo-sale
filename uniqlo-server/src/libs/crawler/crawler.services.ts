@@ -128,7 +128,10 @@ export class CrawlerService {
           person: person,
           title: title,
           image: image,
-          price: oldPrice !== '' ? Number(oldPrice.replace(/[^\d+]/g, '')) : 0,
+          price:
+            oldPrice !== ''
+              ? Number(oldPrice.replace(/[^\d+]/g, ''))
+              : undefined,
           listSizeaColor: listSizeaColor,
         };
       } catch (e) {
@@ -146,7 +149,7 @@ export class CrawlerService {
       person: response.person,
       title: response.title,
       image: response.image,
-      price: response.price,
+      price: response.price || response.listSizeaColor[0].price,
       salePrice: response.listSizeaColor[0].price,
       time: 'Now',
       sale: response.listSizeaColor[0].sale,
