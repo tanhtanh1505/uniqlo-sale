@@ -78,7 +78,7 @@ export class FavoritesService {
     const res: FavoriteResponseDto[] = [];
     const listFavorite = await this.favoriteModel.find({ user: req.user._id });
     for (const favorite of listFavorite) {
-      const cloth = await this.clothesService.findByCode(favorite.code);
+      const cloth = await this.clothesService.crawlDetails(favorite.code);
       const sizeColor = cloth.sizeColor.find(
         (sizeColor) =>
           sizeColor.color == favorite.color && sizeColor.size == favorite.size,
