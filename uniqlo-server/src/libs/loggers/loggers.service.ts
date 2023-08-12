@@ -59,4 +59,16 @@ export class LoggersService {
     console.log(count);
     return count;
   }
+
+  async removeLogsBefore(days: number) {
+    const today = new Date();
+    const beforeDay = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate() - days,
+    );
+    await this.loggerModel.deleteMany({
+      createdAt: { $lt: beforeDay },
+    });
+  }
 }

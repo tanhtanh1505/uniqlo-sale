@@ -13,3 +13,50 @@
    margin-top: 30px;
    // border: 1px solid #ccc;
 }
+
+.filter_search_box {
+   display: flex;
+   flex-direction: column;
+   position: fixed;
+   width: 200px;
+   margin-left: -200px;
+   margin-top: var(--default-header-height);
+   height: wrap-content;
+   top: 40%;
+   transform: translateY(-50%);
+   border: 1.5px solid var(--primary);
+   border-radius: 5px;
+   padding: 16px 8px;
+   background-color: #fff;
+   transition: all 0.3s ease-in-out;
+   z-index: 1000;
+}
+
+.search {
+   margin-bottom: 10px;
+   background-color: #ccc;
+   border-bottom: 1px solid var(--primary);
+
+   input {
+      border: none;
+      outline: none;
+      padding: 5px;
+      width: 100%;
+      font-size: 1.7rem;
+   }
+}
+
+.filter {
+   .filter_option {
+      border: none;
+      outline: none;
+      padding: 5px;
+      width: 100%;
+      font-size: 1.8rem;
+
+      input {
+         margin-right: 5px;
+         accent-color: var(--primary);
+      }
+   }
+}

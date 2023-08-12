@@ -129,7 +129,7 @@ export class ClothesService {
         const timeNow = new Date();
         const lastestUpdate = `Lastest Update: ${timeNow
           .toISOString()
-          .slice(0, 10)} ${timeNow.toLocaleTimeString()}`;
+          .slice(0, 10)} ${timeNow.toLocaleTimeString('vi-VN')}`;
 
         const columnTitles = [
           'Code',

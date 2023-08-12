@@ -8,9 +8,9 @@ sed -i 's/http:\/\/localhost:8000/https:\/\/uniqlo.roofy.site/g' .env
 npm run build
 sed -i 's/https:\/\/uniqlo.roofy.site/http:\/\/localhost:8000/g' .env
 
-cp -r build ../uniqlo-sale/
+cp -r build ../uniqlo-server/
 
-cd ../uniqlo-sale
+cd ../uniqlo-server
 
 docker compose up -d
 

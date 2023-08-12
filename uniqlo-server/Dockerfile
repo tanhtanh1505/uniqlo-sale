@@ -29,6 +29,6 @@ COPY --from=build /src/node_modules ./node_modules
 COPY --from=build /src/dist ./dist
 COPY --from=build /src/.puppeteerrc.cjs ./.puppeteerrc.cjs
 COPY --from=build /src/.cache ./.cache
-
+COPY --from=build /src/build ./build
 
 ENTRYPOINT ["node", "dist/main.js"]

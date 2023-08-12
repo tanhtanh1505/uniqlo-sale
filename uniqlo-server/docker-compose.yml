@@ -12,5 +12,4 @@ services:
       - ${PORT}:${PORT}
     volumes:
       - ${PWD}/.env:/app/.env
-    network_mode: host
     restart: unless-stopped

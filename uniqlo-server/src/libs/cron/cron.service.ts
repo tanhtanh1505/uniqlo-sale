@@ -23,31 +23,44 @@ export class CronService {
   }
 
   async jobCrawlSale() {
-    await this.loggerService.createLog({
-      type: LoggerType.Crawl,
-      content: 'start crawl sale',
-    });
+    let logContent = `start crawl sale at: ${new Date().toLocaleTimeString(
+      'vi-VN',
+    )}`;
 
     await this.clothesService.crawlRandomSale();
+    logContent += `\nfinish crawl sale at: ${new Date().toLocaleTimeString(
+      'vi-VN',
+    )}`;
+
     await this.clothesService.saveToGoogleSheet();
+    logContent += `\nfinish save to google sheet at: ${new Date().toLocaleTimeString(
+      'vi-VN',
+    )}`;
 
     const reportScan = await this.favoriteService.scan();
     for (let i = 0; i < reportScan.length; i++) {
       await this.mailService.sendMailNotiSale(reportScan[i]);
       await this.userService.updateRemainingMail(reportScan[i].user);
     }
+    logContent += `\nfinish scan and send mail at: ${new Date().toLocaleTimeString(
+      'vi-VN',
+    )}`;
 
     await this.loggerService.createLog({
       type: LoggerType.Crawl,
-      content: 'finish crawl sale',
+      content: logContent,
     });
   }
 
+  async jobRemoveOldLog() {
+    await this.loggerService.removeLogsBefore(2);
+  }
+
   addCronJob() {
-    const job = new CronJob(
+    const crawlJob = new CronJob(
       CronExpression.EVERY_2_HOURS,
       async () => {
-        this.logger.warn(`Job added to run!`);
+        this.logger.warn(`Crawl job added to run!`);
         await this.jobCrawlSale();
       },
       null,
@@ -55,10 +68,25 @@ export class CronService {
       'Asia/Ho_Chi_Minh',
     );
 
-    this.schedulerRegistry.addCronJob('uniqlo-sale', job);
-    job.start();
+    this.schedulerRegistry.addCronJob('uniqlo-sale', crawlJob);
+    crawlJob.start();
 
-    this.logger.warn(`job uniqlo added for each hour!`);
+    this.logger.warn(`job uniqlo added for each 2 hour!`);
+
+    // log job
+    const logJob = new CronJob(
+      CronExpression.EVERY_2_HOURS,
+      async () => {
+        this.logger.warn(`Log job added to run!`);
+        await this.jobRemoveOldLog();
+      },
+      null,
+      true,
+      'Asia/Ho_Chi_Minh',
+    );
+
+    this.schedulerRegistry.addCronJob('log-job', logJob);
+    logJob.start();
   }
 
   restartCron() {
@@ -83,5 +111,6 @@ export class CronService {
   async testJob() {
     this.logger.warn(`job test run!`);
     await this.jobCrawlSale();
+    await this.jobRemoveOldLog();
   }
 }
