@@ -19,7 +19,7 @@ export class CronService {
     private userService: UsersService,
     private loggerService: LoggersService,
   ) {
-    // this.addCronJob();
+    this.addCronJob();
   }
 
   async jobCrawlSale() {

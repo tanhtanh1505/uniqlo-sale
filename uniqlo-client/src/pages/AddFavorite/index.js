@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 const cx = classNames.bind(styles);
 
 function AddFavorite() {
-   const code = useParams().code ?? 'E458104-001';
+   const code = useParams().code;
    const [url, setUrl] = useState('');
    const [product, setProduct] = useState({});
    const [loading, setLoading] = useState(false);
@@ -19,18 +19,22 @@ function AddFavorite() {
    const [expectedPrice, setExpectedPrice] = useState(0);
 
    useEffect(() => {
+      let urlQuery = `${config.api.url}/clothes/filter?limit=1`;
       if (code) {
-         setLoading(true);
-         axios
-            .get(`${config.api.url}/clothes/find-by-code?code=${code}`)
-            .then((res) => {
-               setProduct(res.data);
-               setLoading(false);
-            })
-            .catch((err) => {
-               console.log(err);
-            });
+         urlQuery = `${config.api.url}/clothes/find-by-code?code=${code}`;
       }
+      setLoading(true);
+      axios
+         .get(urlQuery)
+         .then((res) => {
+            if (code) {
+               setProduct(res.data);
+            } else setProduct(res.data[0]);
+            setLoading(false);
+         })
+         .catch((err) => {
+            console.log(err);
+         });
    }, [code]);
 
    const handleSearch = async () => {

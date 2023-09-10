@@ -138,7 +138,6 @@ export class CrawlerService {
         return null;
       }
     });
-    console.log(response);
 
     await browser.close();
 

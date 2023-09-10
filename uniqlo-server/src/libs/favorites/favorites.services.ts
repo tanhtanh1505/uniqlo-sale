@@ -128,8 +128,6 @@ export class FavoritesService {
       }
     }
 
-    console.log(res);
-
     return res;
   }
 }

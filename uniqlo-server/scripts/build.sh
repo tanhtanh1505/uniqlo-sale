@@ -4,9 +4,9 @@ fi
 
 
 cd ../uniqlo-client
-sed -i 's/http:\/\/localhost:8000/https:\/\/uniqlo.roofy.site/g' .env
+sed -i 's/http:\/\/localhost:8000/https:\/\/saletoday.info/g' .env
 npm run build
-sed -i 's/https:\/\/uniqlo.roofy.site/http:\/\/localhost:8000/g' .env
+sed -i 's/https:\/\/saletoday.info/http:\/\/localhost:8000/g' .env
 
 cp -r build ../uniqlo-server/
 

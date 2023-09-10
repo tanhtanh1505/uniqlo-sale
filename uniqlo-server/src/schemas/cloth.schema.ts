@@ -36,5 +36,7 @@ export class Cloth {
   @Prop()
   sale: boolean;
 }
+const ClothSchema = SchemaFactory.createForClass(Cloth);
+ClothSchema.index({ title: 'text' });
 
-export const ClothSchema = SchemaFactory.createForClass(Cloth);
+export { ClothSchema };

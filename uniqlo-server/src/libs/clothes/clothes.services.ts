@@ -7,7 +7,7 @@ import { Person } from 'src/utils/enums';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UrlsService } from '../urls/urls.service';
-import { CrawlClothResponse } from './clothes.dto';
+import { CrawlClothResponse, GetClothesReq } from './clothes.dto';
 
 @Injectable()
 export class ClothesService {
@@ -28,7 +28,6 @@ export class ClothesService {
       for (const person of Object.values(Person)) {
         const urls = await this.urlService.getUrlByPerson(person);
         let count = 0;
-        console.log(urls);
         for (const url of urls) {
           const tempRes = await this.crawlerService.crawlRandomSale(
             person,
@@ -82,6 +81,30 @@ export class ClothesService {
 
   async findAll(): Promise<Cloth[]> {
     return await this.clothModel.find({ sale: true }).exec();
+  }
+
+  async filter(req: GetClothesReq): Promise<Cloth[]> {
+    const { limit, offset, persons, keyword } = req;
+    const query = {
+      sale: true,
+    };
+
+    if (persons && persons.length > 0) {
+      query['person'] = { $in: persons };
+    }
+
+    // full text search
+    if (keyword) {
+      query['$text'] = { $search: keyword };
+    }
+
+    const clothes = await this.clothModel
+      .find(query)
+      .skip(offset)
+      .limit(limit)
+      .exec();
+
+    return clothes;
   }
 
   async checkIfExist(

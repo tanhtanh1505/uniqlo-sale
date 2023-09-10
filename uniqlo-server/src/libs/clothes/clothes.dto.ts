@@ -14,3 +14,17 @@ export class SizeColorAdded extends SizeColor {
   @ApiProperty({ example: false, description: 'Added' })
   added: boolean;
 }
+
+export class GetClothesReq {
+  @ApiProperty({ example: 0, description: 'Limit' })
+  limit: number;
+
+  @ApiProperty({ example: 0, description: 'Offset' })
+  offset: number;
+
+  @ApiProperty({ example: Person.Men, description: 'Person' })
+  persons: Person[];
+
+  @ApiProperty({ example: 'cloth', description: 'Keyword' })
+  keyword: string;
+}

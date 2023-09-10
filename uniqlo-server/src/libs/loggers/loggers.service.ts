@@ -56,7 +56,6 @@ export class LoggersService {
       createdAt: { $gte: start, $lt: end },
     });
 
-    console.log(count);
     return count;
   }
 

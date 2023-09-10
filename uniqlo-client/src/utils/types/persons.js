@@ -1,1 +1,1 @@
-export const persons = ['men', 'women'];
+export const persons = ['men', 'women', 'kids', 'baby'];

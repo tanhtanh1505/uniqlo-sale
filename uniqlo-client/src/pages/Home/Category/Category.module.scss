@@ -1,0 +1,33 @@
+.wrapper {
+   width: 70%;
+}
+
+.title {
+   margin-top: 40px;
+   margin-bottom: 8px;
+}
+
+.list_sale {
+   // slide
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: space-around;
+}
+
+.filter_search_box {
+   display: flex;
+   flex-direction: column;
+   position: fixed;
+   width: 200px;
+   margin-left: -200px;
+   margin-top: var(--default-header-height);
+   height: wrap-content;
+   top: 40%;
+   transform: translateY(-50%);
+   border: 1.5px solid var(--primary);
+   border-radius: 5px;
+   padding: 16px 8px;
+   background-color: #fff;
+   transition: all 0.3s ease-in-out;
+   z-index: 1000;
+}

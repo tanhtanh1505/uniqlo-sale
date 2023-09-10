@@ -9,7 +9,7 @@ import {
 
 import { Cloth } from 'src/entity';
 import { ClothesService } from './clothes.services';
-import { CrawlClothResponse } from './clothes.dto';
+import { CrawlClothResponse, GetClothesReq } from './clothes.dto';
 import { Roles } from 'src/utils/roles/role.decorator';
 import { Role } from 'src/utils/roles/role.enum';
 
@@ -60,6 +60,13 @@ export class ClothesController {
   @Get('all')
   async findAll(): Promise<Cloth[]> {
     return this.clothesService.findAll();
+  }
+
+  @ApiOperation({ summary: 'Filter' })
+  @ApiResponse({ status: 200, type: Cloth })
+  @Get('filter')
+  async filter(@Query() q: GetClothesReq): Promise<Cloth[]> {
+    return this.clothesService.filter(q);
   }
 
   @ApiBearerAuth()
